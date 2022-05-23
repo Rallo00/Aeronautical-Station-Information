@@ -1,0 +1,408 @@
+﻿<Window x:Class="ASI.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:ASI"
+        mc:Ignorable="d"
+        Title="ASI: Aeronautical Stations Information" Height="680" Width="800" MinHeight="600" MinWidth="800" WindowStyle="SingleBorderWindow">
+    <!-- #region STATIC APPLICATION PROPERTIES -->
+    <Window.Resources>
+        <!-- #region STATIC RES: COLORS -->
+        <SolidColorBrush x:Key="ToolbarBgColor" Color="#292F74"/>
+        <SolidColorBrush x:Key="FadedBlack" Color="#aaa"/>
+        <!-- #endregion -->
+        <!-- #region STATIC RES: TOPBAR BTN ITEM LOGO -->
+        <Style TargetType="Image" x:Key="TopBarBtnItemLogoStyle">
+            <Setter Property="Width" Value="20"/>
+            <Setter Property="Height" Value="20"/>
+        </Style>
+        <!-- #endregion -->
+        <!-- #region STATIC RES: TOOLBAR BUTTON -->
+        <Style TargetType="Button" x:Key="ToolBarBtnStyle">
+            <Setter Property="Margin" Value="5,0,0,0"/>
+            <Setter Property="Width" Value="65"/>
+            <Setter Property="Height" Value="60"/>
+            <Setter Property="BorderBrush" Value="Transparent"/>
+            <Setter Property="Background" Value="Transparent"/>
+        </Style>
+        <!-- #endregion -->
+        <!-- #region STATIC RES: TOOLBAR TOGGLE BUTTON -->
+        <Style TargetType="ToggleButton" x:Key="ToolBarTBtnStyle">
+            <Setter Property="Margin" Value="5,0,0,0"/>
+            <Setter Property="Width" Value="65"/>
+            <Setter Property="Height" Value="60"/>
+            <Setter Property="BorderBrush" Value="Transparent"/>
+            <Setter Property="Background" Value="Transparent"/>
+        </Style>
+        <!-- #endregion -->
+        <!-- #region STATIC RES: TOOLBAR IMAGE -->
+        <Style TargetType="Image" x:Key="ToolBarImgStyle">
+            <Setter Property="Width" Value="25"/>
+            <Setter Property="Height" Value="25"/>
+        </Style>
+        <!-- #endregion -->
+        <!-- #region STATIC RES: TOOLBAR BUTTON TEXT -->
+        <Style TargetType="TextBlock" x:Key="ToolBarBtnTxtStyle">
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="FontFamily" Value="Helvetica Neue"/>
+        </Style>
+        <!-- #endregion -->
+        <!-- #region STATIC RES: TXT STATION TITLE -->
+        <Style TargetType="TextBlock" x:Key="AirportTitleTxtStyle">
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+        </Style>
+        <!-- #endregion -->
+        <!-- #region STATIC RES: TXT WEBSITE -->
+        <Style TargetType="TextBlock" x:Key="WebsiteTxtStyle">
+            <Setter Property="Foreground" Value="#0000FF"/>
+            <Setter Property="TextDecorations" Value="Underline"/>
+        </Style>
+        <!-- #endregion -->
+        <!-- #region STATIC RES: TXB CODE -->
+        <Style TargetType="TextBox" x:Key="CodeTxtStyle">
+            <Setter Property="FontFamily" Value="Consolas"/>
+            <Setter Property="FontSize" Value="12"/>
+        </Style>
+        <!-- #endregion -->
+        <!-- #region STATIC RES: STATUS BAR TXT TITLE-->
+        <Style TargetType="TextBlock" x:Key="StatusBarTitleTxtStyle">
+            <Setter Property="FontWeight" Value="SemiBold"/>
+        </Style>
+        <!-- #endregion -->
+    </Window.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="20"/>
+            <RowDefinition Height="60"/>
+            <RowDefinition Height="1*"/>
+            <RowDefinition Height="20"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="1*"/>
+            <ColumnDefinition Width="1.15*"/>
+        </Grid.ColumnDefinitions>
+        <!-- #region TOP MENU -->
+        <Grid Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2">
+            <Menu>
+                <MenuItem Header="File">
+                    <MenuItem Header="Quit" Click="MenuQuit_Click"/>
+                </MenuItem>
+                <MenuItem Header="Edit"/>
+                <MenuItem Header="Settings">
+                    <Separator/>
+                    <MenuItem Header="Options" Click="MenuSettingsOptions_Click"/>
+                </MenuItem>
+            </Menu>
+        </Grid>
+        <!-- #endregion -->
+        <!-- #region TOOL BAR -->
+        <Grid Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2">
+            <DockPanel>
+                <Grid Background="{StaticResource ToolbarBgColor}">
+                    <StackPanel Orientation="Horizontal">
+                        <Button Style="{StaticResource ToolBarBtnStyle}" ToolTip="Refresh all data without restart." Click="ToolBarRefresh_Click">
+                            <StackPanel Orientation="Vertical">
+                                <Image Style="{StaticResource ToolBarImgStyle}" Source="Icons/48x48_refresh.png"/>
+                                <TextBlock Style="{StaticResource ToolBarBtnTxtStyle}" Text="Refresh" Margin="0,5,0,0"/>
+                            </StackPanel>
+                        </Button>
+                        <Separator Margin="-10,0,-15,0" Width="45" Height="5" RenderTransformOrigin="0.5,0.5">
+                            <Separator.RenderTransform>
+                                <TransformGroup>
+                                    <ScaleTransform/>
+                                    <SkewTransform/>
+                                    <RotateTransform Angle="90"/>
+                                    <TranslateTransform/>
+                                </TransformGroup>
+                            </Separator.RenderTransform>
+                        </Separator>
+                        <StackPanel Orientation="Vertical">
+                            <Image Name="imgChartAvailability" Width="65" Height="32" ToolTip="Charts availability. White are available. Empty are not available" Source="/Icons/48x48_chartsoffline.png" Margin="5,6,0,0"/>
+                            <TextBlock Style="{StaticResource ToolBarBtnTxtStyle}" Text="Availability" Margin="8,0,0,0"/>
+                        </StackPanel>
+                        <Button Style="{StaticResource ToolBarBtnStyle}" ToolTip="Open charts library folder." Margin="5,0,0,0" Click="ToolBarChartFolder_Click">
+                            <StackPanel Orientation="Vertical">
+                                <Image Style="{StaticResource ToolBarImgStyle}" Source="Icons/48x48_folder.png"/>
+                                <TextBlock Style="{StaticResource ToolBarBtnTxtStyle}" Text="Cache" Margin="0,5,0,0"/>
+                            </StackPanel>
+                        </Button>
+                        <Separator Margin="-10,0,-15,0" Width="45" Height="5" RenderTransformOrigin="0.5,0.5">
+                            <Separator.RenderTransform>
+                                <TransformGroup>
+                                    <ScaleTransform/>
+                                    <SkewTransform/>
+                                    <RotateTransform Angle="90"/>
+                                    <TranslateTransform/>
+                                </TransformGroup>
+                            </Separator.RenderTransform>
+                        </Separator>
+                        <Button Style="{StaticResource ToolBarBtnStyle}" ToolTip="Turn the selected chart by 90° clockwise." Margin="5,0,0,0" Click="ToolBarChartTurn_Click">
+                            <StackPanel Orientation="Vertical">
+                                <Image Style="{StaticResource ToolBarImgStyle}" Source="Icons/48x48_rotate.png"/>
+                                <TextBlock Style="{StaticResource ToolBarBtnTxtStyle}" Text="Turn" Margin="0,5,0,0"/>
+                            </StackPanel>
+                        </Button>
+                        <Button Style="{StaticResource ToolBarBtnStyle}" ToolTip="Open the selected chart as image in Windows." Margin="5,0,0,0" Click="ToolBarChartOpen_Click">
+                            <StackPanel Orientation="Vertical">
+                                <Image Style="{StaticResource ToolBarImgStyle}" Source="Icons/48x48_chart.png"/>
+                                <TextBlock Style="{StaticResource ToolBarBtnTxtStyle}" Text="Open" Margin="0,5,0,0"/>
+                            </StackPanel>
+                        </Button>
+                        <ToggleButton Style="{StaticResource ToolBarTBtnStyle}" x:Name="tbtnChartDarkMode" ToolTip="Toggle dark mode for charts." Margin="5,0,-5,0">
+                            <StackPanel Orientation="Vertical">
+                                <Image Style="{StaticResource ToolBarImgStyle}" Source="Icons/48x48_darkmode.png"/>
+                                <TextBlock Style="{StaticResource ToolBarBtnTxtStyle}" Text="Dark mode" Margin="0,5,0,0"/>
+                            </StackPanel>
+                        </ToggleButton>
+                        <Separator Margin="5,0,0,0"/>
+                        <Button Style="{StaticResource ToolBarBtnStyle}" ToolTip="Zoom-in the selected chart." Click="ToolBarChartZoomIn_Click">
+                            <StackPanel Orientation="Vertical">
+                                <Image Style="{StaticResource ToolBarImgStyle}" Source="Icons/48x48_zoomIn.png"/>
+                                <TextBlock Style="{StaticResource ToolBarBtnTxtStyle}" Text="Zoom in" Margin="0,5,0,0"/>
+                            </StackPanel>
+                        </Button>
+                        <Button Style="{StaticResource ToolBarBtnStyle}" ToolTip="Zoom-out the selected chart." Margin="5,0,0,0" Click="ToolBarChartZoomOut_Click">
+                            <StackPanel Orientation="Vertical">
+                                <Image Style="{StaticResource ToolBarImgStyle}" Source="Icons/48x48_zoomOut.png"/>
+                                <TextBlock Style="{StaticResource ToolBarBtnTxtStyle}" Text="Zoom out" Margin="0,5,0,0"/>
+                            </StackPanel>
+                        </Button>
+                        <Separator Margin="-10,0,-15,0" Width="45" Height="5" RenderTransformOrigin="0.5,0.5">
+                            <Separator.RenderTransform>
+                                <TransformGroup>
+                                    <ScaleTransform/>
+                                    <SkewTransform/>
+                                    <RotateTransform Angle="90"/>
+                                    <TranslateTransform/>
+                                </TransformGroup>
+                            </Separator.RenderTransform>
+                        </Separator>
+                        <!-- Sidebar search ICAO station -->
+                        <TextBox x:Name="txbSearchICAO" Margin="10,0,0,0" Background="Transparent" Foreground="White" Text="Search here..." BorderBrush="White" Width="80" Height="30" VerticalContentAlignment="Center" FontStyle="Italic" KeyUp="txbSearchICAO_KeyUp" GotFocus="txbSearchICAO_GotFocus"/>
+                        <Button x:Name="btnSearchICAO" Style="{StaticResource ToolBarBtnStyle}" Click="btnSearchICAO_Click">
+                            <StackPanel Orientation="Vertical">
+                                <Image Style="{StaticResource ToolBarImgStyle}" Source="Icons/48x48_search.png"/>
+                                <TextBlock Style="{StaticResource ToolBarBtnTxtStyle}" Text="Search" Margin="0,5,0,0"/>
+                            </StackPanel>
+                        </Button>
+                    </StackPanel>
+                </Grid>
+            </DockPanel>
+        </Grid>
+        <!-- #endregion -->
+        <!-- #region SIDEBAR -->
+        <Grid Grid.Row="2" Grid.Column="0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="1*"/>
+                <RowDefinition Height="1*"/>
+            </Grid.RowDefinitions>
+            <StackPanel Orientation="Vertical" Margin="5,5,5,5" Width="Auto">
+                <TabControl Grid.Row="0" Margin="0,5,0,0" Height="Auto">
+                    <!-- #region TabControl: Airport Information -->
+                    <TabItem x:Name="tabAirportInfo" Header="Airport Information">
+                        <StackPanel Orientation="Vertical" Margin="5,5,5,5">
+                            <TextBlock Style="{StaticResource AirportTitleTxtStyle}" Name="txtAirportTitle" Text="Search a station to begin"/>
+                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
+                                <StackPanel Orientation="Vertical" HorizontalAlignment="Left">
+                                    <TextBlock Margin="0,5,0,0" FontWeight="SemiBold" Text="City:"/>
+                                    <TextBlock Margin="0,5,0,0" FontWeight="SemiBold" Text="Country:"/>
+                                    <TextBlock Margin="0,5,0,0" FontWeight="SemiBold" Text="Elevation:"/>
+                                    <TextBlock Margin="0,5,0,0" FontWeight="SemiBold" Text="IATA:"/>
+                                    <TextBlock Margin="0,5,0,0" FontWeight="SemiBold" Text="Latitude:"/>
+                                    <TextBlock Margin="0,5,0,0" FontWeight="SemiBold" Text="Longitude:"/>
+                                    <TextBlock Margin="0,5,0,0" FontWeight="SemiBold" Text="Notes:"/>
+                                    <TextBlock Margin="0,5,0,0" FontWeight="SemiBold" Text="Website:"/>
+                                </StackPanel>
+                                <StackPanel Orientation="Vertical" Margin="5,0,0,0" HorizontalAlignment="Left">
+                                    <TextBlock HorizontalAlignment="Left" Margin="0,5,0,0" Name="txtCity"/>
+                                    <TextBlock HorizontalAlignment="Left" Margin="0,5,0,0" Name="txtCountry"/>
+                                    <TextBlock HorizontalAlignment="Left" Margin="0,5,0,0" Name="txtElevation"/>
+                                    <TextBlock HorizontalAlignment="Left" Margin="0,5,0,0" Name="txtIATA"/>
+                                    <TextBlock HorizontalAlignment="Left" Margin="0,5,0,0" Name="txtLatitude"/>
+                                    <TextBlock HorizontalAlignment="Left" Margin="0,5,0,0" Name="txtLongitude"/>
+                                    <TextBlock HorizontalAlignment="Left" Margin="0,5,0,0" Name="txtNotes"/>
+                                    <TextBlock HorizontalAlignment="Left" Margin="0,5,0,0" Name="txtWebsite" Style="{StaticResource WebsiteTxtStyle}" MouseLeftButtonUp="txtWebsite_MouseLeftButtonUp"/>
+                                </StackPanel>
+                            </StackPanel>
+                        </StackPanel>
+                    </TabItem>
+                    <!-- #endregion -->
+                    <!-- #region TabControl: Runways -->
+                    <TabItem Header="Runways">
+                        <StackPanel Orientation="Vertical" Margin="5,5,5,5">
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="Available runways:" VerticalAlignment="Center"/>
+                                <ComboBox Name="cbxRunways" Margin="5,0,0,0" SelectionChanged="cbxRunways_SelectionChanged" Width="80"/>
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal">
+                                <StackPanel Orientation="Vertical">
+                                    <TextBlock Margin="0,5,0,0" FontWeight="SemiBold" Text="Real bearing:"/>
+                                    <TextBlock Margin="0,5,0,0" FontWeight="SemiBold" Text="Surface:"/>
+                                    <TextBlock Margin="0,5,0,0" FontWeight="SemiBold" Text="Length:"/>
+                                </StackPanel>
+                                <StackPanel Orientation="Vertical" Margin="5,0,0,0">
+                                    <TextBlock Margin="0,5,0,0" Name="txtRealBearing"/>
+                                    <TextBlock Margin="0,5,0,0" Name="txtSurface"/>
+                                    <TextBlock Margin="0,5,0,0" Name="txtLength"/>
+                                </StackPanel>
+                            </StackPanel>
+                            <!-- #region RUNWAY DRAWING -->
+                            <Grid Name="runwayGrid" Width="120" Height="120" HorizontalAlignment="Right" RenderTransformOrigin="0.5,0.5" Margin="0,-10,5,0">
+                                <Rectangle x:Name="runwayRectangle" Margin="45,0,0,0" Fill="#242429" Height="100" Stroke="#242429" VerticalAlignment="Center" Width="30" HorizontalAlignment="Left" RenderTransformOrigin="0.5,0.5"/>
+                                <Label x:Name="txtRwy2" Content="02" HorizontalAlignment="Left" Margin="45,85,0,0" Width="30" VerticalAlignment="Top" FontFamily="Consolas" FontWeight="Bold" Foreground="White" HorizontalContentAlignment="Center" Grid.Row="1"/>
+                                <Label x:Name="txtRwy1" Content="01" HorizontalAlignment="Left" Margin="45,8,0,0" Width="30" VerticalAlignment="Top" FontFamily="Consolas" FontWeight="Bold" Foreground="White" RenderTransformOrigin="0.5,0.5" HorizontalContentAlignment="Center">
+                                    <Label.RenderTransform>
+                                        <TransformGroup>
+                                            <ScaleTransform/>
+                                            <SkewTransform/>
+                                            <RotateTransform Angle="-180"/>
+                                            <TranslateTransform/>
+                                        </TransformGroup>
+                                    </Label.RenderTransform>
+                                </Label>
+                                <Image x:Name="imgWind" RenderTransformOrigin="0.5,0.5" Height="100" Width="100"/>
+                            </Grid>
+                            <!-- #endregion -->
+                        </StackPanel>
+                    </TabItem>
+                    <!-- #endregion -->
+                    <!-- #region TabControl: Metar/Taf -->
+                    <TabItem Header="Metar/Taf">
+                        <StackPanel Orientation="Vertical" Margin="5,5,5,5">
+                            <TextBlock Style="{StaticResource AirportTitleTxtStyle}" Text="METAR"/>
+                            <TextBox Name="txbMetar" Style="{StaticResource CodeTxtStyle}" Height="70" AcceptsReturn="True" TextWrapping="Wrap"/>
+                            <TextBlock Style="{StaticResource AirportTitleTxtStyle}" Text="TAF"/>
+                            <TextBox Name="txbTaf" Style="{StaticResource CodeTxtStyle}" Height="70" AcceptsReturn="True" TextWrapping="Wrap"/>
+                        </StackPanel>
+                    </TabItem>
+                    <!-- #endregion -->
+                    <!-- #region TabControl: Frequencies -->
+                    <TabItem Header="Frequencies">
+                        <StackPanel Orientation="Vertical" Margin="5,5,5,5">
+                            <DataGrid Name="grdFrequencies" Height="175" AlternatingRowBackground="#EEF5FD"/>
+                        </StackPanel>
+                    </TabItem>
+                    <!-- #endregion -->
+                </TabControl>
+            </StackPanel>
+            <TabControl Grid.Row="1" Margin="0,5,5,0" Height="Auto">
+                <!-- #region TabControl 2: Charts -->
+                <TabItem Header="Charts">
+                    <StackPanel Orientation="Vertical" Margin="5,5,5,5" Width="Auto" Height="Auto">
+                        <StackPanel Orientation="Horizontal" Width="Auto" Height="Auto">
+                            <CheckBox Margin="0,0,0,0" Unchecked="ChartCheckbox_CheckChanged" Checked="ChartCheckbox_CheckChanged" Name="chkChartAirport" Content="Airport"/>
+                            <CheckBox Margin="5,0,0,0" Unchecked="ChartCheckbox_CheckChanged" Checked="ChartCheckbox_CheckChanged" Name="chkChartAirspace" Content="Airspace"/>
+                            <CheckBox Margin="5,0,0,0" Unchecked="ChartCheckbox_CheckChanged" Checked="ChartCheckbox_CheckChanged" Name="chkChartDeparture" Content="Departure"/>
+                            <CheckBox Margin="5,0,0,0" Unchecked="ChartCheckbox_CheckChanged" Checked="ChartCheckbox_CheckChanged" Name="chkChartArrival" Content="Arrival"/>
+                            <CheckBox Margin="5,0,0,0" Unchecked="ChartCheckbox_CheckChanged" Checked="ChartCheckbox_CheckChanged" Name="chkChartApproach" Content="Approach"/>
+                        </StackPanel>
+                        <ListBox Name="lsbCharts" FontFamily="Consolas" FontSize="12" Margin="0,5,0,0" Height="200" SelectionChanged="lsbCharts_SelectionChanged"/>
+                    </StackPanel>
+                </TabItem>
+                <!-- #endregion -->
+                <!-- #region TabControl 2: Weather -->
+                <TabItem Header="Weather">
+                    <StackPanel Orientation="Vertical" Margin="5,5,5,5">
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
+                            <StackPanel Orientation="Vertical" HorizontalAlignment="Left">
+                                <TextBlock Margin="0,5,0,0" FontWeight="SemiBold" Text="Metar Time/Date:"/>
+                                <TextBlock Margin="0,5,0,0" FontWeight="SemiBold" Text="Pressure:"/>
+                                <TextBlock Margin="0,5,0,0" FontWeight="SemiBold" Text="Temperature:"/>
+                                <TextBlock Margin="0,5,0,0" FontWeight="SemiBold" Text="Dew point:"/>
+                                <TextBlock Margin="0,5,0,0" FontWeight="SemiBold" Text="Surface wind:"/>
+                                <TextBlock Margin="0,5,0,0" FontWeight="SemiBold" Text="Visibility:"/>
+                                <TextBlock Margin="0,5,0,0" FontWeight="SemiBold" Text="Clouds Layers:"/>
+                            </StackPanel>
+                            <StackPanel Orientation="Vertical" Margin="5,0,0,0" HorizontalAlignment="Left">
+                                <TextBlock HorizontalAlignment="Left" Margin="0,5,0,0" Name="txtWeatherTime"/>
+                                <TextBlock HorizontalAlignment="Left" Margin="0,5,0,0" Name="txtWeatherPressure"/>
+                                <TextBlock HorizontalAlignment="Left" Margin="0,5,0,0" Name="txtWeatherTemperature"/>
+                                <TextBlock HorizontalAlignment="Left" Margin="0,5,0,0" Name="txtWeatherDewPoint"/>
+                                <TextBlock HorizontalAlignment="Left" Margin="0,5,0,0" Name="txtWeatherWind"/>
+                                <TextBlock HorizontalAlignment="Left" Margin="0,5,0,0" Name="txtWeatherVisibility"/>
+                                <TextBlock HorizontalAlignment="Left" Margin="0,5,0,0" Name="txtWeatherClouds"/>
+                            </StackPanel>
+                        </StackPanel>
+                    </StackPanel>
+                </TabItem>
+                <!-- #endregion -->
+            </TabControl>
+        </Grid>
+        <!-- #endregion -->
+        <!-- #region CHART AREA -->
+        <Grid Grid.Row="2" Grid.Column="1">
+            <Border Name="chartBorder" ClipToBounds="True" Margin="5,5,5,5">
+                <Image x:Name="imgChart" Width="426" Height="520" HorizontalAlignment="Left" VerticalAlignment="Top" RenderTransformOrigin="0.5,0.5" MouseWheel="imgChart_MouseWheel" MouseLeftButtonDown="imgChart_MouseLeftButtonDown" MouseLeftButtonUp="imgChart_MouseLeftButtonUp" MouseMove="imgChart_MouseMove"/>
+            </Border>
+        </Grid>
+        <!-- #endregion -->
+        <!-- #region STATUS BAR -->
+        <Grid Grid.Row="3" Grid.ColumnSpan="2" Background="#DDD">
+            <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Stretch">
+                <TextBlock Margin="5,0,0,0" Style="{StaticResource StatusBarTitleTxtStyle}" Text="Current time:"/>
+                <TextBlock Margin="5,0,0,0" Name="txtLocalTime" Text="XX:XX"/>
+                <Separator Width="16" RenderTransformOrigin="0.5,0.5">
+                    <Separator.RenderTransform>
+                        <TransformGroup>
+                            <ScaleTransform/>
+                            <SkewTransform/>
+                            <RotateTransform Angle="90"/>
+                            <TranslateTransform/>
+                        </TransformGroup>
+                    </Separator.RenderTransform>
+                </Separator>
+                <TextBlock Style="{StaticResource StatusBarTitleTxtStyle}" Text="Zulu time:"/>
+                <TextBlock Margin="5,0,0,0" Name="txtZuluTime" Text="XX:XX"/>
+                <Separator Width="16" RenderTransformOrigin="0.5,0.5">
+                    <Separator.RenderTransform>
+                        <TransformGroup>
+                            <ScaleTransform/>
+                            <SkewTransform/>
+                            <RotateTransform Angle="90"/>
+                            <TranslateTransform/>
+                        </TransformGroup>
+                    </Separator.RenderTransform>
+                </Separator>
+                <TextBlock Style="{StaticResource StatusBarTitleTxtStyle}" Text="Region:"/>
+                <TextBlock Margin="5,0,0,0" Name="txtCurrentRegion" Text="XXXX"/>
+                <Separator Width="16" RenderTransformOrigin="0.5,0.5">
+                    <Separator.RenderTransform>
+                        <TransformGroup>
+                            <ScaleTransform/>
+                            <SkewTransform/>
+                            <RotateTransform Angle="90"/>
+                            <TranslateTransform/>
+                        </TransformGroup>
+                    </Separator.RenderTransform>
+                </Separator>
+                <TextBlock Style="{StaticResource StatusBarTitleTxtStyle}" Text="AIRAC:"/>
+                <TextBlock Margin="5,0,0,0" Name="txtCurrentAirac" Text="XXXX"/>
+                <Separator Width="16" RenderTransformOrigin="0.5,0.5">
+                    <Separator.RenderTransform>
+                        <TransformGroup>
+                            <ScaleTransform/>
+                            <SkewTransform/>
+                            <RotateTransform Angle="90"/>
+                            <TranslateTransform/>
+                        </TransformGroup>
+                    </Separator.RenderTransform>
+                </Separator>
+                <TextBlock Style="{StaticResource StatusBarTitleTxtStyle}" Text="Expiry Date:"/>
+                <TextBlock Margin="5,0,0,0" Name="txtCurrentAiracExpDate" Text="dd/mm/yyyy"/>
+                <Separator Width="16" RenderTransformOrigin="0.5,0.5">
+                    <Separator.RenderTransform>
+                        <TransformGroup>
+                            <ScaleTransform/>
+                            <SkewTransform/>
+                            <RotateTransform Angle="90"/>
+                            <TranslateTransform/>
+                        </TransformGroup>
+                    </Separator.RenderTransform>
+                </Separator>
+            </StackPanel>
+        </Grid>
+        <!-- #endregion -->
+    </Grid>
+</Window>

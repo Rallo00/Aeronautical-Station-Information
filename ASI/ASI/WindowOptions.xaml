@@ -1,0 +1,167 @@
+﻿<Window x:Class="ASI.WindowOptions"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:ASI"
+        mc:Ignorable="d"
+        Title="Options" Height="Auto" Width="500" WindowStartupLocation="CenterScreen" WindowStyle="ToolWindow">
+    <Window.Resources>
+        <!-- #region STATIC RES: TITLE-->
+        <Style TargetType="TextBlock" x:Key="StatusBarTitleTxtStyle">
+            <Setter Property="FontWeight" Value="SemiBold"/>
+        </Style>
+        <!-- #endregion -->
+    </Window.Resources>
+    <Grid>
+        <StackPanel Orientation="Vertical" Margin="5,5,5,5">
+            <TextBlock Text="Configure the settings of the application:" />
+            <TabControl TabStripPlacement="Left" Margin="0,5,0,0" Height="Auto">
+                <!-- #region Charts -->
+                <TabItem Header="Charts">
+                    <Grid>
+                        <StackPanel Orientation="Vertical" Margin="5,5,5,5">
+                            <StackPanel Orientation="Horizontal">
+                                <StackPanel Orientation="Vertical">
+                                    <RadioButton GroupName="chartsService" Content="Use Jeppesen for flight charts" Name="rbtnUseJeppesenCharts"/>
+                                    <RadioButton GroupName="chartsService" Content="Use Lido for flight charts" Name="rbtnUseLidoCharts" Margin="0,5,0,0"/>
+                                    <RadioButton GroupName="chartsService" Content="Do not use flight charts" Name="rbtnNoCharts" Margin="0,5,0,0" IsChecked="true"/>
+                                </StackPanel>
+                                <StackPanel Orientation="Vertical" Margin="150,0,5,0" HorizontalAlignment="Right">
+                                    <Button Content="Empty cache" Name="btnChartsEmptyCache" Click="btnChartsEmptyCache_Click"/>
+                                </StackPanel>
+                            </StackPanel>
+                            <GroupBox Header="Login: Jeppesen" Margin="0,5,0,0">
+                                <StackPanel Orientation="Vertical" Margin="5,5,5,5">
+                                    <StackPanel Orientation="Horizontal">
+                                        <StackPanel Orientation="Vertical" Margin="0,5,0,0">
+                                            <TextBlock Text="Login:"/>
+                                            <TextBlock Text="Password:" Margin="0,7,0,0"/>
+                                        </StackPanel>
+                                        <StackPanel Orientation="Vertical" Margin="0,5,0,0">
+                                            <TextBox FontFamily="Consolas" FontSize="13" Name="txbJeppesenUser" Margin="5,0,0,0" Width="310"/>
+                                            <TextBox FontFamily="Consolas" FontSize="13" Name="txbJeppesenPassword" Margin="5,5,0,0"/>
+                                        </StackPanel>
+                                    </StackPanel>
+                                </StackPanel>
+                            </GroupBox>
+                            <GroupBox Header="Login: Lufthansa">
+                                <StackPanel Orientation="Horizontal" Margin="5,5,5,5">
+                                    <StackPanel Orientation="Vertical" Margin="0,5,0,0">
+                                        <TextBlock Text="Login:"/>
+                                        <TextBlock Text="Password:" Margin="0,7,0,0"/>
+                                    </StackPanel>
+                                    <StackPanel Orientation="Vertical" Margin="0,5,0,0">
+                                        <TextBox FontFamily="Consolas" FontSize="13" Name="txbLidoUser" Margin="5,0,0,0" Width="310"/>
+                                        <TextBox FontFamily="Consolas" FontSize="13" Name="txbLidoPassword" Margin="5,5,0,0"/>
+                                    </StackPanel>
+                                </StackPanel>
+                            </GroupBox>
+                            <GroupBox Header="OpenAIP" Margin="0,5,0,0">
+                                <StackPanel Orientation="Vertical" Margin="5,5,5,5">
+                                    <CheckBox Content="Use OpenAIP for radio frequencies" Name="chkUseOpenAIP" IsChecked="True"/>
+                                    <StackPanel Orientation="Horizontal">
+                                        <StackPanel Orientation="Vertical" Margin="0,5,0,0">
+                                            <TextBlock Text="Authentication:"/>
+                                        </StackPanel>
+                                        <StackPanel Orientation="Vertical" Margin="0,5,0,0">
+                                            <TextBox FontFamily="Consolas" FontSize="13" Margin="5,0,0,0" Width="282" Text="No authentication required" IsEnabled="False"/>
+                                        </StackPanel>
+                                    </StackPanel>
+                                </StackPanel>
+                            </GroupBox>
+                        </StackPanel>
+                    </Grid>
+                </TabItem>
+                <!-- #endregion -->
+                <!-- #region METAR -->
+                <TabItem Header="METAR">
+                    <StackPanel Orientation="Vertical" Margin="5,5,5,5">
+                        <TextBlock>Retrieve weather data from:</TextBlock>
+                        <RadioButton Name="rbtnWeatherAvwx" GroupName="METAR" Content="AVWX" Margin="0,5,0,0"/>
+                        <RadioButton Name="rbtnWeatherIvao" GroupName="METAR" Content="IVAO (not yet implemented)" Margin="0,5,0,0"/>
+                        <RadioButton Name="rbtnWeatherNoaa" GroupName="METAR" Content="NOAA" Margin="0,5,0,0" IsChecked="true"/>
+                        <RadioButton Name="rbtnWeatherNo" GroupName="METAR" Content="No Weather" Margin="0,5,0,0"/>
+                        <GroupBox Header="Login: AVWX" Margin="0,5,0,0">
+                            <StackPanel Orientation="Vertical" Margin="5,5,5,5">
+                                <StackPanel Orientation="Horizontal" Margin="0,5,0,0">
+                                    <TextBlock Text="Token:"/>
+                                    <TextBox FontFamily="Consolas" FontSize="13" Name="txbAvwxToken" Margin="5,0,0,0" Width="330"/>
+                                </StackPanel>
+                                <TextBlock Text="Get your own AVWX free token here" Margin="0,5,0,0" TextDecorations="Underline" Foreground="#0000FF" MouseLeftButtonUp="GetFreeAVWXToken_Click"/>
+                            </StackPanel>
+                        </GroupBox>
+                    </StackPanel>
+                </TabItem>
+                <!-- #endregion -->
+                <!-- #region Units of measurements -->
+                <TabItem Header="Units">
+                    <Grid>
+                        <StackPanel Orientation="Vertical" Margin="5,5,5,5">
+                            <StackPanel Orientation="Horizontal">
+                                <StackPanel Orientation="Vertical" Margin="5,0,0,0">
+                                    <TextBlock Style="{StaticResource StatusBarTitleTxtStyle}" Text="Set the scale for distance:"/>
+                                    <RadioButton Name="rbtnDistM" GroupName="distance" Content="Meters (m)" Margin="0,2,0,0"/>
+                                    <RadioButton Name="rbtnDistFt" GroupName="distance" Content="Feet (ft)" Margin="0,2,0,0"/>
+                                    <RadioButton Name="rbtnDistYd" GroupName="distance" Content="Yards (yd)" Margin="0,2,0,0"/>
+                                    <RadioButton Name="rbtnDistNm" GroupName="distance" Content="Nautical miles (nm)" Margin="0,2,0,0" IsChecked="True"/>
+                                </StackPanel>
+                                <StackPanel Orientation="Vertical" Margin="50,0,5,0">
+                                    <TextBlock Style="{StaticResource StatusBarTitleTxtStyle}" Text="Set the scale for runway length:"/>
+                                    <RadioButton Name="rbtnRwyM" GroupName="runwayDistance" Content="Meters (m)" Margin="0,2,0,0" IsChecked="True"/>
+                                    <RadioButton Name="rbtnRwyFt" GroupName="runwayDistance" Content="Feet (ft)" Margin="0,2,0,0"/>
+                                    <RadioButton Name="rbtnRwyYd" GroupName="runwayDistance" Content="Yards (yd)" Margin="0,2,0,0"/>
+                                </StackPanel>
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal" Margin="0,5,0,0">
+                                <StackPanel Orientation="Vertical" Margin="5,0,0,0">
+                                    <TextBlock Style="{StaticResource StatusBarTitleTxtStyle}" Text="Set the scale for wind speed:"/>
+                                    <RadioButton Name="rbtnWindMs" GroupName="windSpeed" Content="Meters per second (m/s)" Margin="0,2,0,0"/>
+                                    <RadioButton Name="rbtnWindKph" GroupName="windSpeed" Content="Kilometers per hour (kph)" Margin="0,2,0,0"/>
+                                    <RadioButton Name="rbtnWindMph" GroupName="windSpeed" Content="Miles per hour (mph)" Margin="0,2,0,0"/>
+                                    <RadioButton Name="rbtnWindKts" GroupName="windSpeed" Content="Knots (kts)" Margin="0,2,0,0" IsChecked="True"/>
+                                </StackPanel>
+                                <StackPanel Orientation="Vertical" Margin="33,0,0,0">
+                                    <TextBlock Style="{StaticResource StatusBarTitleTxtStyle}" Text="Set scale for rwy elevation:"/>
+                                    <RadioButton Name="rbtnRwyElM" GroupName="runwayElevation" Content="Meters (m)" Margin="0,2,0,0"/>
+                                    <RadioButton Name="rbtnRwyElFt" GroupName="runwayElevation" Content="Feet (ft)" Margin="0,2,0,0" IsChecked="True"/>
+                                    <RadioButton Name="rbtnRwyElYd" GroupName="runwayElevation" Content="Yards (yd)" Margin="0,2,0,0"/>
+                                </StackPanel>
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal">
+                                <StackPanel Orientation="Vertical" Margin="5,5,0,0">
+                                    <TextBlock Style="{StaticResource StatusBarTitleTxtStyle}" Text="Set scale for temperature:"/>
+                                    <RadioButton Name="rbtnTempC" GroupName="temperature" Content="Celsius (C)" Margin="0,2,0,0" IsChecked="True"/>
+                                    <RadioButton Name="rbtnTempF" GroupName="temperature" Content="Fahrenheit (F)" Margin="0,2,0,0"/>
+                                </StackPanel>
+                                <StackPanel Orientation="Vertical" Margin="48,5,0,0">
+                                    <TextBlock Style="{StaticResource StatusBarTitleTxtStyle}" Text="Set scale for pressure:"/>
+                                    <RadioButton Name="rbtnPresHpa" GroupName="pressure" Content="HectoPascal (hPa)" Margin="0,2,0,0" IsChecked="True"/>
+                                    <RadioButton Name="rbtnPresInhg" GroupName="pressure" Content="Inches of mercury (inHg)" Margin="0,2,0,0"/>
+                                </StackPanel>
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal">
+                                <StackPanel Orientation="Vertical" Margin="5,5,0,0">
+                                    <TextBlock Style="{StaticResource StatusBarTitleTxtStyle}" Text="Set scale for visibility:"/>
+                                    <RadioButton Name="rbtnVisibM" GroupName="visibility" Content="Meters (m)" Margin="0,2,0,0" IsChecked="True"/>
+                                    <RadioButton Name="rbtnVisibMi" GroupName="visibility" Content="Miles (mi)" Margin="0,2,0,0"/>
+                                </StackPanel>
+                            </StackPanel>
+                        </StackPanel>
+                    </Grid>
+                </TabItem>
+                <!-- #endregion -->
+                <!-- #region Graphics -->
+                <TabItem Header="Graphics">
+                    <Grid>
+                        <StackPanel Orientation="Vertical" Margin="5,5,5,5">
+                            <CheckBox Name="chkShowWindOnRunway" Content="Show wind arrow on runway"/>
+                        </StackPanel>
+                    </Grid>
+                </TabItem>
+                <!-- #endregion -->
+            </TabControl>
+            <Button Name="btnConfirmSettings" Content="Save settings" Margin="0,5,0,0" Click="btnConfirmSettings_Click" Height="35"/>
+        </StackPanel>
+    </Grid>
+</Window>
