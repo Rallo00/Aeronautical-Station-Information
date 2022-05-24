@@ -73,6 +73,9 @@
     <Reference Include="NOAALib">
       <HintPath>ManualDependencies\NOAALib.dll</HintPath>
     </Reference>
+    <Reference Include="OpenAipLib">
+      <HintPath>..\..\..\OpenAipLib\OpenAipLib\bin\Debug\OpenAipLib.dll</HintPath>
+    </Reference>
     <Reference Include="PresentationFramework.Aero2" />
     <Reference Include="System" />
     <Reference Include="System.Buffers, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
@@ -121,6 +124,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Classes\Airport.cs" />
     <Compile Include="Classes\Settings.cs" />
     <Compile Include="WindowOptions.xaml.cs">
       <DependentUpon>WindowOptions.xaml</DependentUpon>
@@ -143,7 +147,6 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Classes\OpenAIP.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>

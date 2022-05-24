@@ -20,7 +20,7 @@ namespace ASI
         // SETTINGS
         public static Settings APP_SETTINGS = new Settings();
         private readonly DispatcherTimer TimeClock = new DispatcherTimer();
-        private AVWXLib.Airport currentAirport = new AVWXLib.Airport();
+        private Airport currentAirport = null;
         //Charts-related
         private int CHART_ROTATION = 0;
         private string PATH_SELECTED_CHART = null;
@@ -61,7 +61,6 @@ namespace ASI
                     GetStationInfo(inputData);
                     //Getting station METAR/TAF
                     GetStationMetarTaf(inputData);
-                    GetAirportFrequencies(inputData);
                     GetStationCharts(inputData);
                     //Focusing on station search
                     txbSearchICAO.Focus();
@@ -358,7 +357,7 @@ namespace ASI
         {
             //Clearing airport data
             txtAirportTitle.Text = "Search a station to begin";
-            txtCity.Text = txtCountry.Text = txtElevation.Text = txtIATA.Text = txtLatitude.Text = txtLongitude.Text = txtRealBearing.Text = txtSurface.Text = txtLength.Text = txtNotes.Text = txtWebsite.Text = "";
+            txtCity.Text = txtCountry.Text = txtElevation.Text = txtIATA.Text = txtLatitude.Text = txtLongitude.Text = txtRealBearing.Text = txtSurface.Text = txtLength.Text = txtNotes.Text = txtWebsite.Text = txtWidth.Text = "";
             cbxRunways.Items.Clear();
             //Clearing metar/taf data
             txbMetar.Clear(); txbTaf.Clear();
@@ -392,32 +391,44 @@ namespace ASI
         {
             if (cbxRunways.SelectedIndex != -1)
             {
-                //Handling runway information based on selected runway in listbox
-                string runwayIdent1 = cbxRunways.SelectedValue.ToString().Split('/')[0];
-                //Getting and showing selected runway properties
-                AVWXLib.Runway selectedRunway = new AVWXLib.Runway();
-                foreach (AVWXLib.Runway r in currentAirport.Runways)
-                    if (r.Identification1 == runwayIdent1)
-                        selectedRunway = r;
-                //Handling missing real berings information
-                if (selectedRunway.Bearing1 != null)
-                    txtRealBearing.Text = selectedRunway.Bearing1 + "°/" + selectedRunway.Bearing2 + "°";
-                else
-                    txtRealBearing.Text = "Not available.";
-                //Showing other runway information
-                if (MainWindow.APP_SETTINGS.UNIT_RWY == "M")
-                    txtLength.Text = FeetToMeters(Convert.ToInt16(selectedRunway.Length)) + " m";
-                else if (MainWindow.APP_SETTINGS.UNIT_RWY == "FT")
-                    txtLength.Text = selectedRunway.Length + " ft";
-                else if (MainWindow.APP_SETTINGS.UNIT_RWY == "YD")
-                    txtLength.Text = MetersToYards(FeetToMeters(int.Parse(selectedRunway.Length))) + " yd";
-                else
-                    txtLength.Text = selectedRunway.Length;
-                txtSurface.Text = char.ToUpper(selectedRunway.Surface[0]) + selectedRunway.Surface.Substring(1);
-                //Drawing runway
-                double heading = double.Parse(selectedRunway.Bearing1, System.Globalization.CultureInfo.InvariantCulture);
-                double bearing2 = double.Parse(selectedRunway.Bearing2, System.Globalization.CultureInfo.InvariantCulture);
-                DrawRunway(heading, selectedRunway.Identification1, selectedRunway.Identification2);
+                //GESTIRE DIVERSE RUNWAY
+                if (APP_SETTINGS.IsInformationAVWX || APP_SETTINGS.IsInformationOpenAip)
+                {
+                    //Handling runway information based on selected runway in listbox
+                    string runwayIdent1 = cbxRunways.SelectedValue.ToString().Split('/')[0];
+                    //Selecting the correct runway to show properties
+                    Runway selectedRunway = null;
+                    foreach (Runway r in currentAirport.Runways)
+                        if (r.Identification1 == runwayIdent1)
+                            selectedRunway = r;
+                    txtRealBearing.Text = $"{selectedRunway.Bearing1}°/{selectedRunway.Bearing2}°";
+                    //Showing runway length
+                    if (MainWindow.APP_SETTINGS.UNIT_RWY == "M")
+                        txtLength.Text = $"{selectedRunway.RwyLength} m";
+                    else if (MainWindow.APP_SETTINGS.UNIT_RWY == "FT")
+                        txtLength.Text = $"{MetersToFeet(selectedRunway.RwyLength)} ft";
+                    else if (MainWindow.APP_SETTINGS.UNIT_RWY == "YD")
+                        txtLength.Text = $"{MetersToYards(FeetToMeters(selectedRunway.RwyLength))} yd";
+                    else
+                        txtLength.Text = selectedRunway.RwyLength.ToString();
+                    //Showing runway width
+                    if (selectedRunway.RwyWidth != -1)
+                    {
+                        if (MainWindow.APP_SETTINGS.UNIT_RWY == "M")
+                            txtWidth.Text = $"{selectedRunway.RwyWidth} m";
+                        else if (MainWindow.APP_SETTINGS.UNIT_RWY == "FT")
+                            txtWidth.Text = $"{MetersToFeet(selectedRunway.RwyWidth)} ft";
+                        else if (MainWindow.APP_SETTINGS.UNIT_RWY == "YD")
+                            txtWidth.Text = $"{MetersToYards(selectedRunway.RwyWidth)} yd";
+                    }
+                    else
+                        txtWidth.Text = "Not available";
+                    txtSurface.Text = char.ToUpper(selectedRunway.Surface[0]) + selectedRunway.Surface.Substring(1);
+                    //Drawing runway
+                    double heading = double.Parse(selectedRunway.Bearing1.ToString(), System.Globalization.CultureInfo.InvariantCulture);
+                    double bearing2 = double.Parse(selectedRunway.Bearing2.ToString(), System.Globalization.CultureInfo.InvariantCulture);
+                    DrawRunway(heading, selectedRunway.Identification1, selectedRunway.Identification2);
+                }
             }
         }
         private void DrawRunway(double heading, string R1, string R2)
@@ -452,27 +463,40 @@ namespace ASI
         private async void GetStationInfo(string icao)
         {
             if (APP_SETTINGS.IsInformationAVWX)
+                currentAirport = new Airport(await AVWXLib.GetStationInfo(icao, MainWindow.APP_SETTINGS.AVWX_TOKEN));
+            else if (APP_SETTINGS.IsInformationOpenAip)
+                currentAirport = new Airport(await OpenAipLib.GetAirportInfo(icao, MainWindow.APP_SETTINGS.OPENAIP_TOKEN));
+            //Showing station information
+            txtAirportTitle.Text = currentAirport.Name;
+            txtCity.Text = currentAirport.City;
+            txtCountry.Text = currentAirport.Country;
+            if (MainWindow.APP_SETTINGS.UNIT_ELEV == "M")
+                txtElevation.Text = currentAirport.Elevation + " m";
+            else if (MainWindow.APP_SETTINGS.UNIT_ELEV == "FT")
+                txtElevation.Text = MetersToFeet(currentAirport.Elevation) + " ft";
+            else if (MainWindow.APP_SETTINGS.UNIT_ELEV == "YD")
+                txtElevation.Text = MetersToYards(Convert.ToInt16(currentAirport.Elevation)) + " yd";
+            txtIATA.Text = currentAirport.IATACode;
+            txtLatitude.Text = $"{currentAirport.Latitude} °N";
+            txtLongitude.Text = $"{currentAirport.Longitude} °N";
+            txtNotes.Text = currentAirport.Notes;
+            txtWebsite.Text = currentAirport.Website;
+            //Showing Runway info
+            foreach (Runway r in currentAirport.Runways)
+                cbxRunways.Items.Add(r.Identification1 + "/" + r.Identification2);
+            cbxRunways.SelectedIndex = 0;
+
+            //Showing frequencies
+            if (APP_SETTINGS.IsInformationOpenAip)
+                grdFrequencies.ItemsSource = currentAirport.Frequencies;
+            else
             {
-                currentAirport = await AVWXLib.GetStationInfo(icao, MainWindow.APP_SETTINGS.AVWX_TOKEN);
-                //Showing station info
-                txtAirportTitle.Text = currentAirport.Name;
-                txtCity.Text = currentAirport.City;
-                txtCountry.Text = currentAirport.Country;
-                if (MainWindow.APP_SETTINGS.UNIT_ELEV == "FT")
-                    txtElevation.Text = currentAirport.Elevation + " ft";
-                else if (MainWindow.APP_SETTINGS.UNIT_ELEV == "M")
-                    txtElevation.Text = FeetToMeters(int.Parse(currentAirport.Elevation)) + " m";
-                else if (MainWindow.APP_SETTINGS.UNIT_ELEV == "YD")
-                    txtElevation.Text = MetersToYards(FeetToMeters(int.Parse(currentAirport.Elevation))) + " yd";
-                txtIATA.Text = currentAirport.IATACode;
-                txtLatitude.Text = currentAirport.Latitude;
-                txtLongitude.Text = currentAirport.Longitude;
-                txtNotes.Text = currentAirport.Note;
-                txtWebsite.Text = currentAirport.Website;
-                //Showing Runway info
-                foreach (AVWXLib.Runway r in currentAirport.Runways)
-                    cbxRunways.Items.Add(r.Identification1 + "/" + r.Identification2);
-                cbxRunways.SelectedIndex = 0;
+                try
+                {
+                    currentAirport.Frequencies = new Airport(await OpenAipLib.GetAirportInfo(currentAirport.ICAOCode, APP_SETTINGS.OPENAIP_TOKEN)).Frequencies;
+                    grdFrequencies.ItemsSource = currentAirport.Frequencies;
+                }
+                catch (Exception) { MessageBox.Show("An error occurred while searching for frequencies in use. Your request has been closed by OpenAIP server.", "Errore", MessageBoxButton.OK, MessageBoxImage.Asterisk); }
             }
         }
         private async void GetStationMetarTaf(string icao)
@@ -499,19 +523,6 @@ namespace ASI
                     txbTaf.Text = "Weather info have been disabled in the settings.";
             }
             catch { txbTaf.Text = "TAF Information not available. Station might not provide weather information"; }
-        }
-        private async void GetAirportFrequencies(string icao)
-        {
-            if (MainWindow.APP_SETTINGS.IsFrequenciesOpenAIP)
-            {
-                try
-                {
-                    List<OpenAIP.Frequency> frequenciesList = await OpenAIP.GetAirportFrequency(icao);
-                    //Print frequencies
-                    grdFrequencies.ItemsSource = frequenciesList;
-                }
-                catch (Exception) { MessageBox.Show("An error occurred while searching for frequencies in use. Your request has been closed by OpenAIP server.", "Errore", MessageBoxButton.OK, MessageBoxImage.Asterisk); }
-            }
         }
         private void GetStationCharts(string icao)
         {
@@ -654,7 +665,7 @@ namespace ASI
                 }
                 reader.Close();
             }
-            catch (FileNotFoundException ex) { HandleWarning("This is your first launch, go to settings and set the program preferences."); }
+            catch (FileNotFoundException) { HandleWarning("This is your first launch, go to settings and set the program preferences."); }
             catch (Exception ex) { HandleException(ex); }
             finally { if (reader != null) reader.Close(); }
 
@@ -662,7 +673,7 @@ namespace ASI
             if (MainWindow.APP_SETTINGS.JP_USER != null && MainWindow.APP_SETTINGS.JP_PASSWORD != null)
             {
                 try { JeppChart = new ChartJeppesen(MainWindow.APP_SETTINGS.JP_USER, MainWindow.APP_SETTINGS.JP_PASSWORD, MainWindow.APP_SETTINGS.DATA_PATH_CHARTS); }
-                catch (Exception ex) { APP_SETTINGS.IsChartServiceJeppesen = false; }
+                catch (Exception) { APP_SETTINGS.IsChartServiceJeppesen = false; }
                 imgChartAvailability.Source = new BitmapImage(new Uri("/Icons/48x48_chartsonline.png", UriKind.Relative));
             }
             //Authenticating Lido
@@ -688,6 +699,9 @@ namespace ASI
                 case "INFO_AVWX":
                     MainWindow.APP_SETTINGS.IsInformationAVWX = value != "0";
                     break;
+                case "INFO_OPENAIP":
+                    MainWindow.APP_SETTINGS.IsInformationOpenAip= value != "0";
+                    break;
                 case "WEATHER_AVWX":
                     MainWindow.APP_SETTINGS.IsWeatherAVWX = value != "0";
                     break;
@@ -697,8 +711,8 @@ namespace ASI
                 case "WEATHER_NOAA":
                     MainWindow.APP_SETTINGS.IsWeatherNOAA = value != "0";
                     break;
-                case "OPENAIP":
-                    MainWindow.APP_SETTINGS.IsFrequenciesOpenAIP = value != "0";
+                case "RADIO_OPENAIP":
+                    MainWindow.APP_SETTINGS.IsFrequenciesOpenAip = value != "0";
                     break;
                 case "JP_USER":
                     if (!string.IsNullOrEmpty(value) && value != " ")
@@ -759,7 +773,10 @@ namespace ASI
             ft = (int)inft;
             double temp = (inft - Math.Truncate(inft)) / 0.8333;
             inchesLeft = (int)temp;
-            return $"{ft}/{inchesLeft} ft";
+            if(inchesLeft == 0)
+                return $"{ft}";
+            else
+                return $"{ft}/{inchesLeft}";
         }
         private int FeetToMeters(int value) { return Convert.ToInt16(value / 3.2808399); }
         private int MetersToYards(int value) { return Convert.ToInt16(value * 1.09361); }

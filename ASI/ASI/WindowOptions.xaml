@@ -17,59 +17,40 @@
         <StackPanel Orientation="Vertical" Margin="5,5,5,5">
             <TextBlock Text="Configure the settings of the application:" />
             <TabControl TabStripPlacement="Left" Margin="0,5,0,0" Height="Auto">
+                <!-- #region Airport data -->
+                <TabItem Header="Airport data">
+                    <Grid>
+                        <StackPanel Orientation="Vertical" Margin="5,5,5,5">
+                            <TextBlock FontWeight="SemiBold" Text="Choose a service for airport information and runways:" Margin="0,0,0,5"/>
+                            <RadioButton GroupName="airportDataService" Content="AVWX" Name="rbtnUseAVWXAirportData"/>
+                            <RadioButton GroupName="airportDataService" Content="OpenAip" Name="rbtnUseOpenAipAirportData" Margin="0,5,0,0"/>
+                            <RadioButton GroupName="airportDataService" Content="No station information" Name="rbtnUseNoAirportData" Margin="0,5,0,0"/>
+                        </StackPanel>
+                    </Grid>
+                </TabItem>
+                <!-- #endregion -->
+                <!-- #region Frequencies -->
+                <TabItem Header="Radio Frequencies">
+                    <Grid>
+                        <StackPanel Orientation="Vertical" Margin="5,5,5,5">
+                            <TextBlock FontWeight="SemiBold" Text="Choose a service for radio frequencies:"/>
+                            <RadioButton Margin="0,5,0,0" GroupName="frequenciesOpenAIP" Content="OpenAIP" Name="rbtnUseOpenAipFrequencies"/>
+                            <RadioButton Margin="0,5,0,0" GroupName="frequenciesOpenAIP" Content="Do not use radio frequencies" Name="rbtnNoFrequencies"/>
+                        </StackPanel>
+                    </Grid>
+                </TabItem>
+                <!-- #endregion -->
                 <!-- #region Charts -->
                 <TabItem Header="Charts">
                     <Grid>
                         <StackPanel Orientation="Vertical" Margin="5,5,5,5">
-                            <StackPanel Orientation="Horizontal">
-                                <StackPanel Orientation="Vertical">
-                                    <RadioButton GroupName="chartsService" Content="Use Jeppesen for flight charts" Name="rbtnUseJeppesenCharts"/>
-                                    <RadioButton GroupName="chartsService" Content="Use Lido for flight charts" Name="rbtnUseLidoCharts" Margin="0,5,0,0"/>
-                                    <RadioButton GroupName="chartsService" Content="Do not use flight charts" Name="rbtnNoCharts" Margin="0,5,0,0" IsChecked="true"/>
-                                </StackPanel>
-                                <StackPanel Orientation="Vertical" Margin="150,0,5,0" HorizontalAlignment="Right">
-                                    <Button Content="Empty cache" Name="btnChartsEmptyCache" Click="btnChartsEmptyCache_Click"/>
-                                </StackPanel>
+                            <StackPanel Orientation="Vertical">
+                                <TextBlock FontWeight="SemiBold" Text="Choose a service for Charts:" Margin="0,0,0,5"/>
+                                <RadioButton GroupName="chartsService" Content="Jeppesen" Name="rbtnUseJeppesenCharts"/>
+                                <RadioButton GroupName="chartsService" Content="Lido" Name="rbtnUseLidoCharts" Margin="0,5,0,0"/>
+                                <RadioButton GroupName="chartsService" Content="Do not use flight charts" Name="rbtnNoCharts" Margin="0,5,0,0" IsChecked="true"/>
+                                <Button Content="Empty charts cache" Name="btnChartsEmptyCache" Click="btnChartsEmptyCache_Click" Margin="0,5,0,0"/>
                             </StackPanel>
-                            <GroupBox Header="Login: Jeppesen" Margin="0,5,0,0">
-                                <StackPanel Orientation="Vertical" Margin="5,5,5,5">
-                                    <StackPanel Orientation="Horizontal">
-                                        <StackPanel Orientation="Vertical" Margin="0,5,0,0">
-                                            <TextBlock Text="Login:"/>
-                                            <TextBlock Text="Password:" Margin="0,7,0,0"/>
-                                        </StackPanel>
-                                        <StackPanel Orientation="Vertical" Margin="0,5,0,0">
-                                            <TextBox FontFamily="Consolas" FontSize="13" Name="txbJeppesenUser" Margin="5,0,0,0" Width="310"/>
-                                            <TextBox FontFamily="Consolas" FontSize="13" Name="txbJeppesenPassword" Margin="5,5,0,0"/>
-                                        </StackPanel>
-                                    </StackPanel>
-                                </StackPanel>
-                            </GroupBox>
-                            <GroupBox Header="Login: Lufthansa">
-                                <StackPanel Orientation="Horizontal" Margin="5,5,5,5">
-                                    <StackPanel Orientation="Vertical" Margin="0,5,0,0">
-                                        <TextBlock Text="Login:"/>
-                                        <TextBlock Text="Password:" Margin="0,7,0,0"/>
-                                    </StackPanel>
-                                    <StackPanel Orientation="Vertical" Margin="0,5,0,0">
-                                        <TextBox FontFamily="Consolas" FontSize="13" Name="txbLidoUser" Margin="5,0,0,0" Width="310"/>
-                                        <TextBox FontFamily="Consolas" FontSize="13" Name="txbLidoPassword" Margin="5,5,0,0"/>
-                                    </StackPanel>
-                                </StackPanel>
-                            </GroupBox>
-                            <GroupBox Header="OpenAIP" Margin="0,5,0,0">
-                                <StackPanel Orientation="Vertical" Margin="5,5,5,5">
-                                    <CheckBox Content="Use OpenAIP for radio frequencies" Name="chkUseOpenAIP" IsChecked="True"/>
-                                    <StackPanel Orientation="Horizontal">
-                                        <StackPanel Orientation="Vertical" Margin="0,5,0,0">
-                                            <TextBlock Text="Authentication:"/>
-                                        </StackPanel>
-                                        <StackPanel Orientation="Vertical" Margin="0,5,0,0">
-                                            <TextBox FontFamily="Consolas" FontSize="13" Margin="5,0,0,0" Width="282" Text="No authentication required" IsEnabled="False"/>
-                                        </StackPanel>
-                                    </StackPanel>
-                                </StackPanel>
-                            </GroupBox>
                         </StackPanel>
                     </Grid>
                 </TabItem>
@@ -77,20 +58,11 @@
                 <!-- #region METAR -->
                 <TabItem Header="METAR">
                     <StackPanel Orientation="Vertical" Margin="5,5,5,5">
-                        <TextBlock>Retrieve weather data from:</TextBlock>
-                        <RadioButton Name="rbtnWeatherAvwx" GroupName="METAR" Content="AVWX" Margin="0,5,0,0"/>
-                        <RadioButton Name="rbtnWeatherIvao" GroupName="METAR" Content="IVAO (not yet implemented)" Margin="0,5,0,0"/>
-                        <RadioButton Name="rbtnWeatherNoaa" GroupName="METAR" Content="NOAA" Margin="0,5,0,0" IsChecked="true"/>
-                        <RadioButton Name="rbtnWeatherNo" GroupName="METAR" Content="No Weather" Margin="0,5,0,0"/>
-                        <GroupBox Header="Login: AVWX" Margin="0,5,0,0">
-                            <StackPanel Orientation="Vertical" Margin="5,5,5,5">
-                                <StackPanel Orientation="Horizontal" Margin="0,5,0,0">
-                                    <TextBlock Text="Token:"/>
-                                    <TextBox FontFamily="Consolas" FontSize="13" Name="txbAvwxToken" Margin="5,0,0,0" Width="330"/>
-                                </StackPanel>
-                                <TextBlock Text="Get your own AVWX free token here" Margin="0,5,0,0" TextDecorations="Underline" Foreground="#0000FF" MouseLeftButtonUp="GetFreeAVWXToken_Click"/>
-                            </StackPanel>
-                        </GroupBox>
+                        <TextBlock FontWeight="SemiBold" Text="Choose a service for weather data:"/>
+                        <RadioButton Margin="0,5,0,0" Name="rbtnWeatherAvwx" GroupName="METAR" Content="AVWX"/>
+                        <RadioButton Margin="0,5,0,0" Name="rbtnWeatherIvao" GroupName="METAR" Content="IVAO (not yet implemented)"/>
+                        <RadioButton Margin="0,5,0,0" Name="rbtnWeatherNoaa" GroupName="METAR" Content="NOAA" IsChecked="true"/>
+                        <RadioButton Margin="0,5,0,0" Name="rbtnWeatherNo" GroupName="METAR" Content="No Weather"/>
                     </StackPanel>
                 </TabItem>
                 <!-- #endregion -->
@@ -156,6 +128,60 @@
                     <Grid>
                         <StackPanel Orientation="Vertical" Margin="5,5,5,5">
                             <CheckBox Name="chkShowWindOnRunway" Content="Show wind arrow on runway"/>
+                        </StackPanel>
+                    </Grid>
+                </TabItem>
+                <!-- #endregion -->
+                <!-- #region Login to services -->
+                <TabItem Header="Login to services">
+                    <Grid>
+                        <StackPanel Orientation="Vertical" Margin="5,5,5,5">
+                            <GroupBox Header="Airport data">
+                                <StackPanel Orientation="Vertical" Margin="5,5,5,5">
+                                    <!-- AVWX -->
+                                    <TextBlock FontWeight="SemiBold" Text="AVWX Services"/>
+                                    <StackPanel Orientation="Horizontal" Margin="0,5,0,0">
+                                        <TextBlock Text="Token:"/>
+                                        <TextBox FontFamily="Consolas" FontSize="13" Name="txbAvwxToken" Margin="5,0,0,0" Width="285"/>
+                                    </StackPanel>
+                                    <TextBlock Text="Get your own AVWX free token here" Margin="40,0,0,0" TextDecorations="Underline" Foreground="#0000FF" MouseLeftButtonUp="GetFreeAVWXToken_Click"/>
+                                    <!-- OpenAIP -->
+                                    <TextBlock FontWeight="SemiBold" Text="OpenAIP Services" Margin="0,5,0,0"/>
+                                    <StackPanel Orientation="Horizontal" Margin="0,5,0,0">
+                                        <TextBlock Text="Token:"/>
+                                        <TextBox FontFamily="Consolas" FontSize="13" Name="txbOpenAipToken" Margin="5,0,0,0" Width="285"/>
+                                    </StackPanel>
+                                    <TextBlock Text="Get your own OpenAIP free token here" Margin="40,0,0,0" TextDecorations="Underline" Foreground="#0000FF" MouseLeftButtonUp="GetFreeOpenAipToken_Click"/>
+                                </StackPanel>
+                            </GroupBox>
+                            <GroupBox Header="Charts">
+                                <StackPanel Orientation="Vertical" Margin="5,5,5,5">
+                                    <!-- Jeppesen -->
+                                    <TextBlock FontWeight="SemiBold" Text="Charts Jeppesen"/>
+                                    <StackPanel Orientation="Horizontal">
+                                        <StackPanel Orientation="Vertical" Margin="0,5,0,0">
+                                            <TextBlock Text="Login:"/>
+                                            <TextBlock Text="Password:" Margin="0,7,0,0"/>
+                                        </StackPanel>
+                                        <StackPanel Orientation="Vertical" Margin="0,5,0,0">
+                                            <TextBox FontFamily="Consolas" FontSize="13" Name="txbJeppesenUser" Margin="5,0,0,0" Width="265"/>
+                                            <TextBox FontFamily="Consolas" FontSize="13" Name="txbJeppesenPassword" Margin="5,5,0,0"/>
+                                        </StackPanel>
+                                    </StackPanel>
+                                    <!-- Lido -->
+                                    <TextBlock FontWeight="SemiBold" Text="Charts Lido" Margin="0,5,0,0"/>
+                                    <StackPanel Orientation="Horizontal">
+                                        <StackPanel Orientation="Vertical" Margin="0,5,0,0">
+                                            <TextBlock Text="Login:"/>
+                                            <TextBlock Text="Password:" Margin="0,7,0,0"/>
+                                        </StackPanel>
+                                        <StackPanel Orientation="Vertical" Margin="0,5,0,0">
+                                            <TextBox FontFamily="Consolas" FontSize="13" Name="txbLidoUser" Margin="5,0,0,0" Width="265"/>
+                                            <TextBox FontFamily="Consolas" FontSize="13" Name="txbLidoPassword" Margin="5,5,0,0"/>
+                                        </StackPanel>
+                                    </StackPanel>
+                                </StackPanel>
+                            </GroupBox>
                         </StackPanel>
                     </Grid>
                 </TabItem>

@@ -15,8 +15,9 @@ namespace ASI
         // SERVICES
         public bool IsChartServiceJeppesen { get; set; }
         public bool IsChartServiceLido { get; set; }
-        public bool IsFrequenciesOpenAIP { get; set; }
+        public bool IsFrequenciesOpenAip { get; set; }
         public bool IsInformationAVWX { get; set; }
+        public bool IsInformationOpenAip { get; set; }
         public bool IsWeatherAVWX { get; set; }
         public bool IsWeatherIVAO { get; set; }
         public bool IsWeatherNOAA { get; set; }
@@ -26,6 +27,7 @@ namespace ASI
         public string LD_USER { get; set; }
         public string LD_PASSWORD { get; set; }
         public string AVWX_TOKEN { get; set; }
+        public string OPENAIP_TOKEN { get; set; }
         // UNITS OF MEASUREMENT
         public string UNIT_DIST { get; set; }
         public string UNIT_RWY { get; set; }
@@ -42,13 +44,14 @@ namespace ASI
             //Default settings
             IsChartServiceJeppesen = IsChartServiceLido = IsWeatherIVAO = IsWeatherAVWX = false;
             IsWeatherNOAA = IsInformationAVWX = true;
-            IsFrequenciesOpenAIP = true;
+            IsFrequenciesOpenAip = true;
             //Default credentials
             JP_USER = "evapilot2";
             JP_PASSWORD = "pilot002";
             LD_USER = "Lufthansa";
             LD_PASSWORD = "kbP6Mwt";
             AVWX_TOKEN = "MWlQgmuag-2MaxWtKGxCmdFnjoNBvmaadnYUOl86nq4";
+            OPENAIP_TOKEN = "1eba052dd328ac3b9894d0c3d62678a6";
             //Default UoM
             UNIT_VISIB = "M";
             UNIT_RWY = "M";

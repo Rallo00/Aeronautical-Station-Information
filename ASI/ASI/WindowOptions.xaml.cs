@@ -29,6 +29,10 @@ namespace ASI
         {
             System.Diagnostics.Process.Start("https://account.avwx.rest/login");
         }
+        private void GetFreeOpenAipToken_Click(object sender, MouseButtonEventArgs e)
+        {
+            System.Diagnostics.Process.Start("https://www.openaip.net/users/clients ");
+        }
         private void btnConfirmSettings_Click(object sender, RoutedEventArgs e)
         {
             StreamWriter writer = null;
@@ -39,10 +43,15 @@ namespace ASI
                 writer = new StreamWriter(MainWindow.APP_SETTINGS.DATA_PATH_SETTINGS);
 
                 //--- SAVING SERVICES ---
-                writer.WriteLine("INFO_AVWX=1");
+                //Airport information
+                if (rbtnUseAVWXAirportData.IsChecked == true) writer.WriteLine("INFO_AVWX=1"); else writer.WriteLine("INFO_AVWX=0");
+                if (rbtnUseOpenAipAirportData.IsChecked == true) writer.WriteLine("INFO_OPENAIP=1"); else writer.WriteLine("INFO_OPENAIP=0");
+                //Charts
                 if (rbtnUseJeppesenCharts.IsChecked == true) writer.WriteLine("JEPPESEN=1"); else writer.WriteLine("JEPPESEN=0");
                 if (rbtnUseLidoCharts.IsChecked == true) writer.WriteLine("LIDO=1"); else writer.WriteLine("LIDO=0");
-                if (chkUseOpenAIP.IsChecked == true) writer.WriteLine("OPENAIP=1"); else writer.WriteLine("OPENAIP=0");
+                //Radio Frequencies
+                if (rbtnUseOpenAipFrequencies.IsChecked == true) writer.WriteLine("RADIO_OPENAIP=1"); else writer.WriteLine("RADIO_OPENAIP=0");
+                //Weather
                 if (rbtnWeatherAvwx.IsChecked == true) writer.WriteLine("WEATHER_AVWX=1"); else writer.WriteLine("WEATHER_AVWX=0");
                 if (rbtnWeatherIvao.IsChecked == true) writer.WriteLine("WEATHER_IVAO=1"); else writer.WriteLine("WEATHER_IVAO=0");
                 if (rbtnWeatherNoaa.IsChecked == true) writer.WriteLine("WEATHER_NOAA=1"); else writer.WriteLine("WEATHER_NOAA=0");
@@ -64,6 +73,9 @@ namespace ASI
                 //--- SAVING AVWX DATA ---
                 MainWindow.APP_SETTINGS.AVWX_TOKEN = txbAvwxToken.Text;
                 writer.WriteLine($"AVWX_TOKEN={MainWindow.APP_SETTINGS.AVWX_TOKEN}");
+                //--- SAVING OPENAIP DATA ---
+                MainWindow.APP_SETTINGS.OPENAIP_TOKEN = txbOpenAipToken.Text;
+                writer.WriteLine($"OPENAIP_TOKEN={MainWindow.APP_SETTINGS.AVWX_TOKEN}");
                 //--- SAVING SETTINGS DATA ----
                 //Distance
                 if (rbtnDistM.IsChecked == true) writer.WriteLine("UNIT_DIST=M");
@@ -134,11 +146,21 @@ namespace ASI
         private void LoadSettings()
         {
             //Loading services
+            //Airport information
+            rbtnUseAVWXAirportData.IsChecked = MainWindow.APP_SETTINGS.IsInformationAVWX;
+            rbtnUseOpenAipAirportData.IsChecked = MainWindow.APP_SETTINGS.IsInformationOpenAip;
+            if (!MainWindow.APP_SETTINGS.IsInformationAVWX && !MainWindow.APP_SETTINGS.IsInformationOpenAip)
+                rbtnUseNoAirportData.IsChecked = true;
+            //Charts
             rbtnUseJeppesenCharts.IsChecked = MainWindow.APP_SETTINGS.IsChartServiceJeppesen;
             rbtnUseLidoCharts.IsChecked = MainWindow.APP_SETTINGS.IsChartServiceLido;
             if (!MainWindow.APP_SETTINGS.IsChartServiceLido && !MainWindow.APP_SETTINGS.IsChartServiceJeppesen)
                 rbtnNoCharts.IsChecked = true;
-            chkUseOpenAIP.IsChecked = MainWindow.APP_SETTINGS.IsFrequenciesOpenAIP;
+            //Radio Frequencies
+            rbtnUseOpenAipFrequencies.IsChecked = MainWindow.APP_SETTINGS.IsFrequenciesOpenAip;
+            if(!MainWindow.APP_SETTINGS.IsFrequenciesOpenAip)
+                rbtnNoFrequencies.IsChecked = true;
+            //Weather
             rbtnWeatherAvwx.IsChecked = MainWindow.APP_SETTINGS.IsWeatherAVWX;
             rbtnWeatherIvao.IsChecked = MainWindow.APP_SETTINGS.IsWeatherIVAO;
             rbtnWeatherNoaa.IsChecked = MainWindow.APP_SETTINGS.IsWeatherNOAA;
@@ -152,6 +174,9 @@ namespace ASI
             txbLidoPassword.Text = MainWindow.APP_SETTINGS.LD_PASSWORD;
             //Loading AVWX Token
             txbAvwxToken.Text = MainWindow.APP_SETTINGS.AVWX_TOKEN;
+            //Loading OPENAIP Token
+            txbOpenAipToken.Text = MainWindow.APP_SETTINGS.OPENAIP_TOKEN;
+            
             //LOADING SETTINGS
             //Distance
             if (MainWindow.APP_SETTINGS.UNIT_DIST == "M") rbtnDistM.IsChecked = true;
@@ -205,13 +230,15 @@ namespace ASI
  SETTINGS FILE STRUCTURE: 1 for enabled, 0 for disabled
 JEPPESEN=1
 LIDO=1
-INFO_AVWX=1
-OPENAIP=1
+INFO_AVWX=0
+INFO_OPENAIP=1
+RADIO_OPENAIP=1
 JP_USER=
 JP_PASSWORD=
 LD_USER=
 LD_PASSWORD=
 AVWX_TOKEN=
+OPENAIP_TOKEN=
 UNIT_DIST=
 UNIT_RWY=
 UNIT_WIND=

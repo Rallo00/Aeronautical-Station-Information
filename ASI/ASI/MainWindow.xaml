@@ -241,11 +241,13 @@
                                     <TextBlock Margin="0,5,0,0" FontWeight="SemiBold" Text="Real bearing:"/>
                                     <TextBlock Margin="0,5,0,0" FontWeight="SemiBold" Text="Surface:"/>
                                     <TextBlock Margin="0,5,0,0" FontWeight="SemiBold" Text="Length:"/>
+                                    <TextBlock Margin="0,5,0,0" FontWeight="SemiBold" Text="Width:"/>
                                 </StackPanel>
                                 <StackPanel Orientation="Vertical" Margin="5,0,0,0">
                                     <TextBlock Margin="0,5,0,0" Name="txtRealBearing"/>
                                     <TextBlock Margin="0,5,0,0" Name="txtSurface"/>
                                     <TextBlock Margin="0,5,0,0" Name="txtLength"/>
+                                    <TextBlock Margin="0,5,0,0" Name="txtWidth"/>
                                 </StackPanel>
                             </StackPanel>
                             <!-- #region RUNWAY DRAWING -->
@@ -281,7 +283,7 @@
                     <!-- #region TabControl: Frequencies -->
                     <TabItem Header="Frequencies">
                         <StackPanel Orientation="Vertical" Margin="5,5,5,5">
-                            <DataGrid Name="grdFrequencies" Height="175" AlternatingRowBackground="#EEF5FD"/>
+                            <DataGrid Name="grdFrequencies" Height="175" AlternatingRowBackground="#EEF5FD" AutoGenerateColumns="true" FontFamily="Consolas"/>
                         </StackPanel>
                     </TabItem>
                     <!-- #endregion -->
