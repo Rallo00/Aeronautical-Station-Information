@@ -57,9 +57,7 @@ namespace ASI
                 //Getting station info
                 try
                 {
-                    //Getting station info
                     GetStationInfo(inputData);
-                    //Getting station METAR/TAF
                     GetStationMetarTaf(inputData);
                     GetStationCharts(inputData);
                     //Focusing on station search
@@ -357,7 +355,7 @@ namespace ASI
         {
             //Clearing airport data
             txtAirportTitle.Text = "Search a station to begin";
-            txtCity.Text = txtCountry.Text = txtElevation.Text = txtIATA.Text = txtLatitude.Text = txtLongitude.Text = txtRealBearing.Text = txtSurface.Text = txtLength.Text = txtNotes.Text = txtWebsite.Text = txtWidth.Text = "";
+            txtATIS.Text = txtCity.Text = txtCountry.Text = txtElevation.Text = txtIATA.Text = txtLatitude.Text = txtLongitude.Text = txtRealBearing.Text = txtSurface.Text = txtLength.Text = txtNotes.Text = txtWebsite.Text = txtWidth.Text = "";
             cbxRunways.Items.Clear();
             //Clearing metar/taf data
             txbMetar.Clear(); txbTaf.Clear();
@@ -485,16 +483,32 @@ namespace ASI
             foreach (Runway r in currentAirport.Runways)
                 cbxRunways.Items.Add(r.Identification1 + "/" + r.Identification2);
             cbxRunways.SelectedIndex = 0;
-
+            //Getting and showing ATIS
+            if (APP_SETTINGS.IsAtisIVAO)
+            {
+                IVAOAtisLib.Atis airportAtis = await IVAOAtisLib.GetAtis(icao);
+                currentAirport.ATIS = airportAtis.Value;
+                txtATIS.Text = airportAtis.Value;
+                txtAtisCallsign.Text = airportAtis.Callsign;
+                txtAtisRevision.Text = airportAtis.Revision;
+                txtAtisTimestamp.Text = $"{airportAtis.Timestamp.Hour}:{airportAtis.Timestamp.Minute}";
+                txtAtisTimestampUTC.Text = $"{airportAtis.TimestampZulu.Hour}:{airportAtis.TimestampZulu.Minute}";
+            }
+            else
+                txtATIS.Text = "ATIS is not enabled. Check your settings.";
             //Showing frequencies
-            if (APP_SETTINGS.IsInformationOpenAip)
+            if (APP_SETTINGS.IsInformationOpenAip && currentAirport.Frequencies != null)
                 grdFrequencies.ItemsSource = currentAirport.Frequencies;
             else
             {
                 try
                 {
-                    currentAirport.Frequencies = new Airport(await OpenAipLib.GetAirportInfo(currentAirport.ICAOCode, APP_SETTINGS.OPENAIP_TOKEN)).Frequencies;
-                    grdFrequencies.ItemsSource = currentAirport.Frequencies;
+                    Airport airportData = new Airport(await OpenAipLib.GetAirportInfo(currentAirport.ICAOCode, APP_SETTINGS.OPENAIP_TOKEN));
+                    if (airportData.Frequencies != null)
+                    {
+                        currentAirport.Frequencies = airportData.Frequencies;
+                        grdFrequencies.ItemsSource = currentAirport.Frequencies;
+                    }
                 }
                 catch (Exception) { MessageBox.Show("An error occurred while searching for frequencies in use. Your request has been closed by OpenAIP server.", "Errore", MessageBoxButton.OK, MessageBoxImage.Asterisk); }
             }
@@ -713,6 +727,9 @@ namespace ASI
                     break;
                 case "RADIO_OPENAIP":
                     MainWindow.APP_SETTINGS.IsFrequenciesOpenAip = value != "0";
+                    break;
+                case "ATIS_IVAO":
+                    MainWindow.APP_SETTINGS.IsAtisIVAO = value != "0";
                     break;
                 case "JP_USER":
                     if (!string.IsNullOrEmpty(value) && value != " ")

@@ -283,10 +283,35 @@
                     <!-- #region TabControl: Frequencies -->
                     <TabItem Header="Frequencies">
                         <StackPanel Orientation="Vertical" Margin="5,5,5,5">
-                            <DataGrid Name="grdFrequencies" Height="175" AlternatingRowBackground="#EEF5FD" AutoGenerateColumns="true" FontFamily="Consolas"/>
+                            <TextBlock FontWeight="SemiBold" Text="Available Frequencies:"/>
+                            <DataGrid Name="grdFrequencies" Height="175" AlternatingRowBackground="#EEF5FD" AutoGenerateColumns="true" FontFamily="Consolas" Margin="0,5,0,0"/>
                         </StackPanel>
                     </TabItem>
                     <!-- #endregion -->
+                    <!-- #region TabControl: ATIS -->
+                    <TabItem Header="ATIS">
+                        <StackPanel Orientation="Vertical" Margin="5,5,5,5">
+                            <TextBlock Text="Available ATIS:" FontWeight="SemiBold"/>
+                            <!-- Data -->
+                            <StackPanel Orientation="Horizontal" Margin="0,5,0,0">
+                                <StackPanel Orientation="Vertical">
+                                    <TextBlock Margin="0,5,0,0" FontWeight="SemiBold" Text="Callsign:"/>
+                                    <TextBlock Margin="0,5,0,0" FontWeight="SemiBold" Text="Revision:"/>
+                                    <TextBlock Margin="0,5,0,0" FontWeight="SemiBold" Text="Timestamp (UTC):"/>
+                                    <TextBlock Margin="0,5,0,0" FontWeight="SemiBold" Text="Timestamp (local):"/>
+                                </StackPanel>
+                                <StackPanel Orientation="Vertical" Margin="5,0,0,0">
+                                    <TextBlock Margin="0,5,0,0" Name="txtAtisCallsign"/>
+                                    <TextBlock Margin="0,5,0,0" Name="txtAtisRevision"/>
+                                    <TextBlock Margin="0,5,0,0" Name="txtAtisTimestampUTC"/>
+                                    <TextBlock Margin="0,5,0,0" Name="txtAtisTimestamp"/>
+                                </StackPanel>
+                            </StackPanel>
+                            <!-- Raw ATIS -->
+                            <TextBox x:Name="txtATIS" Height="105" FontFamily="Consolas" AcceptsReturn="True" TextWrapping="Wrap" AcceptsTab="True" Margin="0,5,0,0"/>
+                        </StackPanel>
+                    </TabItem>
+                    <!-- #endregion -->                    
                 </TabControl>
             </StackPanel>
             <TabControl Grid.Row="1" Margin="0,5,5,0" Height="Auto">
