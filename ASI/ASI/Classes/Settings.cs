@@ -21,6 +21,7 @@ namespace ASI
         public bool IsWeatherAVWX { get; set; }
         public bool IsWeatherIVAO { get; set; }
         public bool IsWeatherNOAA { get; set; }
+        public bool IsAtisIVAO { get; set; }
         // CREDENTIALS
         public string JP_USER { get; set; }
         public string JP_PASSWORD { get; set; }

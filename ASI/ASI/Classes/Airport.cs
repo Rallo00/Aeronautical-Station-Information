@@ -20,6 +20,7 @@ namespace ASI
         public int Elevation;
         public List<Runway> Runways;
         public List<Frequency> Frequencies;
+        public string ATIS;
 
         public Airport(OpenAipLib.Airport a)
         {
@@ -43,6 +44,7 @@ namespace ASI
             foreach (OpenAipLib.Frequency f in a.Frequencies)
                 freqs.Add(new Frequency(f.Value, f.Name, f.Type));
             Frequencies = freqs;
+            ATIS = "No ATIS available.";
         }
         public Airport(AVWXLib.Airport a)
         {
@@ -68,6 +70,7 @@ namespace ASI
                 
             Runways = rwys;
             Frequencies = null;
+            ATIS = "No ATIS available.";
         }
         private int FeetToMeters(int value) { return Convert.ToInt16(value / 3.2808399); }
     }

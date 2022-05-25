@@ -55,6 +55,8 @@ namespace ASI
                 if (rbtnWeatherAvwx.IsChecked == true) writer.WriteLine("WEATHER_AVWX=1"); else writer.WriteLine("WEATHER_AVWX=0");
                 if (rbtnWeatherIvao.IsChecked == true) writer.WriteLine("WEATHER_IVAO=1"); else writer.WriteLine("WEATHER_IVAO=0");
                 if (rbtnWeatherNoaa.IsChecked == true) writer.WriteLine("WEATHER_NOAA=1"); else writer.WriteLine("WEATHER_NOAA=0");
+                //Atis
+                if (rbtnAtisIvao.IsChecked == true) writer.WriteLine("ATIS_IVAO=1"); else writer.WriteLine("ATIS_IVAO=0");
 
                 //--- SAVING JEPPESEN CHARTS DATA ---
                 writer.WriteLine($"JP_USER={txbJeppesenUser.Text}");
@@ -160,6 +162,10 @@ namespace ASI
             rbtnUseOpenAipFrequencies.IsChecked = MainWindow.APP_SETTINGS.IsFrequenciesOpenAip;
             if(!MainWindow.APP_SETTINGS.IsFrequenciesOpenAip)
                 rbtnNoFrequencies.IsChecked = true;
+            //ATIS
+            rbtnAtisIvao.IsChecked = MainWindow.APP_SETTINGS.IsAtisIVAO;
+            if (!MainWindow.APP_SETTINGS.IsAtisIVAO)
+                rbtnAtisNo.IsChecked = true;
             //Weather
             rbtnWeatherAvwx.IsChecked = MainWindow.APP_SETTINGS.IsWeatherAVWX;
             rbtnWeatherIvao.IsChecked = MainWindow.APP_SETTINGS.IsWeatherIVAO;
@@ -239,6 +245,7 @@ LD_USER=
 LD_PASSWORD=
 AVWX_TOKEN=
 OPENAIP_TOKEN=
+ATIS_IVAO=
 UNIT_DIST=
 UNIT_RWY=
 UNIT_WIND=

@@ -24,7 +24,7 @@
                             <TextBlock FontWeight="SemiBold" Text="Choose a service for airport information and runways:" Margin="0,0,0,5"/>
                             <RadioButton GroupName="airportDataService" Content="AVWX" Name="rbtnUseAVWXAirportData"/>
                             <RadioButton GroupName="airportDataService" Content="OpenAip" Name="rbtnUseOpenAipAirportData" Margin="0,5,0,0"/>
-                            <RadioButton GroupName="airportDataService" Content="No station information" Name="rbtnUseNoAirportData" Margin="0,5,0,0"/>
+                            <RadioButton GroupName="airportDataService" Content="Do not retrieve airports information" Name="rbtnUseNoAirportData" Margin="0,5,0,0"/>
                         </StackPanel>
                     </Grid>
                 </TabItem>
@@ -35,7 +35,7 @@
                         <StackPanel Orientation="Vertical" Margin="5,5,5,5">
                             <TextBlock FontWeight="SemiBold" Text="Choose a service for radio frequencies:"/>
                             <RadioButton Margin="0,5,0,0" GroupName="frequenciesOpenAIP" Content="OpenAIP" Name="rbtnUseOpenAipFrequencies"/>
-                            <RadioButton Margin="0,5,0,0" GroupName="frequenciesOpenAIP" Content="Do not use radio frequencies" Name="rbtnNoFrequencies"/>
+                            <RadioButton Margin="0,5,0,0" GroupName="frequenciesOpenAIP" Content="Do not retrieve radio frequencies" Name="rbtnNoFrequencies"/>
                         </StackPanel>
                     </Grid>
                 </TabItem>
@@ -48,7 +48,7 @@
                                 <TextBlock FontWeight="SemiBold" Text="Choose a service for Charts:" Margin="0,0,0,5"/>
                                 <RadioButton GroupName="chartsService" Content="Jeppesen" Name="rbtnUseJeppesenCharts"/>
                                 <RadioButton GroupName="chartsService" Content="Lido" Name="rbtnUseLidoCharts" Margin="0,5,0,0"/>
-                                <RadioButton GroupName="chartsService" Content="Do not use flight charts" Name="rbtnNoCharts" Margin="0,5,0,0" IsChecked="true"/>
+                                <RadioButton GroupName="chartsService" Content="Do not retrieve flight charts" Name="rbtnNoCharts" Margin="0,5,0,0" IsChecked="true"/>
                                 <Button Content="Empty charts cache" Name="btnChartsEmptyCache" Click="btnChartsEmptyCache_Click" Margin="0,5,0,0"/>
                             </StackPanel>
                         </StackPanel>
@@ -62,7 +62,16 @@
                         <RadioButton Margin="0,5,0,0" Name="rbtnWeatherAvwx" GroupName="METAR" Content="AVWX"/>
                         <RadioButton Margin="0,5,0,0" Name="rbtnWeatherIvao" GroupName="METAR" Content="IVAO (not yet implemented)"/>
                         <RadioButton Margin="0,5,0,0" Name="rbtnWeatherNoaa" GroupName="METAR" Content="NOAA" IsChecked="true"/>
-                        <RadioButton Margin="0,5,0,0" Name="rbtnWeatherNo" GroupName="METAR" Content="No Weather"/>
+                        <RadioButton Margin="0,5,0,0" Name="rbtnWeatherNo" GroupName="METAR" Content="Do not retrieve weather"/>
+                    </StackPanel>
+                </TabItem>
+                <!-- #endregion -->
+                <!-- #region ATIS -->
+                <TabItem Header="ATIS">
+                    <StackPanel Orientation="Vertical" Margin="5,5,5,5">
+                        <TextBlock FontWeight="SemiBold" Text="Choose a source for ATIS data:"/>
+                        <RadioButton Margin="0,5,0,0" Name="rbtnAtisIvao" GroupName="ATIS" Content="IVAO"/>
+                        <RadioButton Margin="0,5,0,0" Name="rbtnAtisNo" GroupName="ATIS" Content="Do not retrieve ATIS data"/>
                     </StackPanel>
                 </TabItem>
                 <!-- #endregion -->
