@@ -1,6 +1,3 @@
-# Aeronautical-Station-Information
-This software allows FlightSim users to get information on airports and stations.
-
 # What is this software?
 This software is called ASI (Aeronautical Station Information), is a OpenSource software that allows flightsim users to get information on airports and stations in a very simple way, just search the desired ICAO code of the airport.
 
