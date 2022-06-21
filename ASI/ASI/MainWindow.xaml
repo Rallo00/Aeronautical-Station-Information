@@ -6,75 +6,8 @@
         xmlns:local="clr-namespace:ASI"
         mc:Ignorable="d"
         Title="ASI: Aeronautical Stations Information" Height="680" Width="800" MinHeight="600" MinWidth="800" WindowStyle="SingleBorderWindow">
-    <!-- #region STATIC APPLICATION PROPERTIES -->
-    <Window.Resources>
-        <!-- #region STATIC RES: COLORS -->
-        <SolidColorBrush x:Key="ToolbarBgColor" Color="#292F74"/>
-        <SolidColorBrush x:Key="FadedBlack" Color="#aaa"/>
-        <!-- #endregion -->
-        <!-- #region STATIC RES: TOPBAR BTN ITEM LOGO -->
-        <Style TargetType="Image" x:Key="TopBarBtnItemLogoStyle">
-            <Setter Property="Width" Value="20"/>
-            <Setter Property="Height" Value="20"/>
-        </Style>
-        <!-- #endregion -->
-        <!-- #region STATIC RES: TOOLBAR BUTTON -->
-        <Style TargetType="Button" x:Key="ToolBarBtnStyle">
-            <Setter Property="Margin" Value="5,0,0,0"/>
-            <Setter Property="Width" Value="65"/>
-            <Setter Property="Height" Value="60"/>
-            <Setter Property="BorderBrush" Value="Transparent"/>
-            <Setter Property="Background" Value="Transparent"/>
-        </Style>
-        <!-- #endregion -->
-        <!-- #region STATIC RES: TOOLBAR TOGGLE BUTTON -->
-        <Style TargetType="ToggleButton" x:Key="ToolBarTBtnStyle">
-            <Setter Property="Margin" Value="5,0,0,0"/>
-            <Setter Property="Width" Value="65"/>
-            <Setter Property="Height" Value="60"/>
-            <Setter Property="BorderBrush" Value="Transparent"/>
-            <Setter Property="Background" Value="Transparent"/>
-        </Style>
-        <!-- #endregion -->
-        <!-- #region STATIC RES: TOOLBAR IMAGE -->
-        <Style TargetType="Image" x:Key="ToolBarImgStyle">
-            <Setter Property="Width" Value="25"/>
-            <Setter Property="Height" Value="25"/>
-        </Style>
-        <!-- #endregion -->
-        <!-- #region STATIC RES: TOOLBAR BUTTON TEXT -->
-        <Style TargetType="TextBlock" x:Key="ToolBarBtnTxtStyle">
-            <Setter Property="Foreground" Value="White"/>
-            <Setter Property="FontFamily" Value="Helvetica Neue"/>
-        </Style>
-        <!-- #endregion -->
-        <!-- #region STATIC RES: TXT STATION TITLE -->
-        <Style TargetType="TextBlock" x:Key="AirportTitleTxtStyle">
-            <Setter Property="FontSize" Value="14"/>
-            <Setter Property="FontWeight" Value="Bold"/>
-        </Style>
-        <!-- #endregion -->
-        <!-- #region STATIC RES: TXT WEBSITE -->
-        <Style TargetType="TextBlock" x:Key="WebsiteTxtStyle">
-            <Setter Property="Foreground" Value="#0000FF"/>
-            <Setter Property="TextDecorations" Value="Underline"/>
-        </Style>
-        <!-- #endregion -->
-        <!-- #region STATIC RES: TXB CODE -->
-        <Style TargetType="TextBox" x:Key="CodeTxtStyle">
-            <Setter Property="FontFamily" Value="Consolas"/>
-            <Setter Property="FontSize" Value="12"/>
-        </Style>
-        <!-- #endregion -->
-        <!-- #region STATIC RES: STATUS BAR TXT TITLE-->
-        <Style TargetType="TextBlock" x:Key="StatusBarTitleTxtStyle">
-            <Setter Property="FontWeight" Value="SemiBold"/>
-        </Style>
-        <!-- #endregion -->
-    </Window.Resources>
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="20"/>
             <RowDefinition Height="60"/>
             <RowDefinition Height="1*"/>
             <RowDefinition Height="20"/>
@@ -83,24 +16,11 @@
             <ColumnDefinition Width="1*"/>
             <ColumnDefinition Width="1.15*"/>
         </Grid.ColumnDefinitions>
-        <!-- #region TOP MENU -->
-        <Grid Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2">
-            <Menu>
-                <MenuItem Header="File">
-                    <MenuItem Header="Quit" Click="MenuQuit_Click"/>
-                </MenuItem>
-                <MenuItem Header="Edit"/>
-                <MenuItem Header="Settings">
-                    <Separator/>
-                    <MenuItem Header="Options" Click="MenuSettingsOptions_Click"/>
-                </MenuItem>
-            </Menu>
-        </Grid>
         <!-- #endregion -->
         <!-- #region TOOL BAR -->
-        <Grid Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2">
+        <Grid Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2">
             <DockPanel>
-                <Grid Background="{StaticResource ToolbarBgColor}">
+                <Grid Style="{StaticResource ToolBarGrid}">
                     <StackPanel Orientation="Horizontal">
                         <Button Style="{StaticResource ToolBarBtnStyle}" ToolTip="Refresh all data without restart." Click="ToolBarRefresh_Click">
                             <StackPanel Orientation="Vertical">
@@ -138,35 +58,10 @@
                                 </TransformGroup>
                             </Separator.RenderTransform>
                         </Separator>
-                        <Button Style="{StaticResource ToolBarBtnStyle}" ToolTip="Turn the selected chart by 90° clockwise." Margin="5,0,0,0" Click="ToolBarChartTurn_Click">
+                        <Button Style="{StaticResource ToolBarBtnStyle}" ToolTip="Open charts library folder." Margin="5,0,0,0" Click="ToolBarSettings_Click">
                             <StackPanel Orientation="Vertical">
-                                <Image Style="{StaticResource ToolBarImgStyle}" Source="Icons/48x48_rotate.png"/>
-                                <TextBlock Style="{StaticResource ToolBarBtnTxtStyle}" Text="Turn" Margin="0,5,0,0"/>
-                            </StackPanel>
-                        </Button>
-                        <Button Style="{StaticResource ToolBarBtnStyle}" ToolTip="Open the selected chart as image in Windows." Margin="5,0,0,0" Click="ToolBarChartOpen_Click">
-                            <StackPanel Orientation="Vertical">
-                                <Image Style="{StaticResource ToolBarImgStyle}" Source="Icons/48x48_chart.png"/>
-                                <TextBlock Style="{StaticResource ToolBarBtnTxtStyle}" Text="Open" Margin="0,5,0,0"/>
-                            </StackPanel>
-                        </Button>
-                        <ToggleButton Style="{StaticResource ToolBarTBtnStyle}" x:Name="tbtnChartDarkMode" ToolTip="Toggle dark mode for charts." Margin="5,0,-5,0">
-                            <StackPanel Orientation="Vertical">
-                                <Image Style="{StaticResource ToolBarImgStyle}" Source="Icons/48x48_darkmode.png"/>
-                                <TextBlock Style="{StaticResource ToolBarBtnTxtStyle}" Text="Dark mode" Margin="0,5,0,0"/>
-                            </StackPanel>
-                        </ToggleButton>
-                        <Separator Margin="5,0,0,0"/>
-                        <Button Style="{StaticResource ToolBarBtnStyle}" ToolTip="Zoom-in the selected chart." Click="ToolBarChartZoomIn_Click">
-                            <StackPanel Orientation="Vertical">
-                                <Image Style="{StaticResource ToolBarImgStyle}" Source="Icons/48x48_zoomIn.png"/>
-                                <TextBlock Style="{StaticResource ToolBarBtnTxtStyle}" Text="Zoom in" Margin="0,5,0,0"/>
-                            </StackPanel>
-                        </Button>
-                        <Button Style="{StaticResource ToolBarBtnStyle}" ToolTip="Zoom-out the selected chart." Margin="5,0,0,0" Click="ToolBarChartZoomOut_Click">
-                            <StackPanel Orientation="Vertical">
-                                <Image Style="{StaticResource ToolBarImgStyle}" Source="Icons/48x48_zoomOut.png"/>
-                                <TextBlock Style="{StaticResource ToolBarBtnTxtStyle}" Text="Zoom out" Margin="0,5,0,0"/>
+                                <Image Style="{StaticResource ToolBarImgStyle}" Source="Icons/48x48_settings.png"/>
+                                <TextBlock Style="{StaticResource ToolBarBtnTxtStyle}" Text="Settings" Margin="0,5,0,0"/>
                             </StackPanel>
                         </Button>
                         <Separator Margin="-10,0,-15,0" Width="45" Height="5" RenderTransformOrigin="0.5,0.5">
@@ -193,7 +88,7 @@
         </Grid>
         <!-- #endregion -->
         <!-- #region SIDEBAR -->
-        <Grid Grid.Row="2" Grid.Column="0">
+        <Grid Grid.Row="1" Grid.Column="0">
             <Grid.RowDefinitions>
                 <RowDefinition Height="1*"/>
                 <RowDefinition Height="1*"/>
@@ -311,7 +206,7 @@
                             <TextBox x:Name="txtATIS" Height="105" FontFamily="Consolas" AcceptsReturn="True" TextWrapping="Wrap" AcceptsTab="True" Margin="0,5,0,0"/>
                         </StackPanel>
                     </TabItem>
-                    <!-- #endregion -->                    
+                    <!-- #endregion -->
                 </TabControl>
             </StackPanel>
             <TabControl Grid.Row="1" Margin="0,5,5,0" Height="Auto">
@@ -359,10 +254,53 @@
         </Grid>
         <!-- #endregion -->
         <!-- #region CHART AREA -->
-        <Grid Grid.Row="2" Grid.Column="1">
-            <Border Name="chartBorder" ClipToBounds="True" Margin="5,5,5,5">
-                <Image x:Name="imgChart" Width="426" Height="520" HorizontalAlignment="Left" VerticalAlignment="Top" RenderTransformOrigin="0.5,0.5" MouseWheel="imgChart_MouseWheel" MouseLeftButtonDown="imgChart_MouseLeftButtonDown" MouseLeftButtonUp="imgChart_MouseLeftButtonUp" MouseMove="imgChart_MouseMove"/>
-            </Border>
+        <Grid Grid.Row="1" Grid.Column="1" Style="{StaticResource ChartsAreaGrid}">
+            <StackPanel Orientation="Vertical">
+                <!-- #region CHART TOOLBAR -->
+                <Grid Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2">
+                    <DockPanel>
+                        <Grid Style="{StaticResource ChartToolBarGrid}">
+                            <StackPanel Orientation="Horizontal">
+                                <Button Style="{StaticResource ChartBtnStyle}" ToolTip="Turn the selected chart by 90° clockwise." Margin="5,0,0,0" Click="ToolBarChartTurn_Click">
+                                    <StackPanel Orientation="Vertical">
+                                        <Image Style="{StaticResource ChartsToolBarImgStyle}" Source="Icons/48x48_rotate.png"/>
+                                        <TextBlock Style="{StaticResource ToolBarBtnTxtStyle}" Text="Turn" Margin="0,5,0,0"/>
+                                    </StackPanel>
+                                </Button>
+                                <Button Style="{StaticResource ChartBtnStyle}" ToolTip="Open the selected chart as image in Windows." Margin="5,0,0,0" Click="ToolBarChartOpen_Click">
+                                    <StackPanel Orientation="Vertical">
+                                        <Image Style="{StaticResource ChartsToolBarImgStyle}" Source="Icons/48x48_chart.png"/>
+                                        <TextBlock Style="{StaticResource ToolBarBtnTxtStyle}" Text="Open" Margin="0,5,0,0"/>
+                                    </StackPanel>
+                                </Button>
+                                <ToggleButton Style="{StaticResource ChartsToolBarToggleButton}" x:Name="tbtnChartDarkMode" ToolTip="Toggle dark mode for charts." Margin="5,0,-5,0">
+                                    <StackPanel Orientation="Vertical">
+                                        <Image Style="{StaticResource ChartsToolBarImgStyle}" Source="Icons/48x48_darkmode.png"/>
+                                        <TextBlock Style="{StaticResource ToolBarBtnTxtStyle}" Text="Dark mode" Margin="0,5,0,0"/>
+                                    </StackPanel>
+                                </ToggleButton>
+                                <Separator Margin="5,0,0,0"/>
+                                <Button Style="{StaticResource ChartBtnStyle}" ToolTip="Zoom-in the selected chart." Click="ToolBarChartZoomIn_Click">
+                                    <StackPanel Orientation="Vertical">
+                                        <Image Style="{StaticResource ChartsToolBarImgStyle}" Source="Icons/48x48_zoomIn.png"/>
+                                        <TextBlock Style="{StaticResource ToolBarBtnTxtStyle}" Text="Zoom in" Margin="0,5,0,0"/>
+                                    </StackPanel>
+                                </Button>
+                                <Button Style="{StaticResource ChartBtnStyle}" ToolTip="Zoom-out the selected chart." Margin="5,0,0,0" Click="ToolBarChartZoomOut_Click">
+                                    <StackPanel Orientation="Vertical">
+                                        <Image Style="{StaticResource ChartsToolBarImgStyle}" Source="Icons/48x48_zoomOut.png"/>
+                                        <TextBlock Style="{StaticResource ToolBarBtnTxtStyle}" Text="Zoom out" Margin="0,5,0,0"/>
+                                    </StackPanel>
+                                </Button>
+                            </StackPanel>
+                        </Grid>
+                    </DockPanel>
+                </Grid>
+                <!-- #endregion -->
+                <Border Name="chartBorder" ClipToBounds="True" Margin="5,5,5,5" Height="497">
+                    <Image x:Name="imgChart" Height="300" HorizontalAlignment="Left" VerticalAlignment="Center" RenderTransformOrigin="0.5,0.5" MouseWheel="imgChart_MouseWheel" MouseLeftButtonDown="imgChart_MouseLeftButtonDown" MouseLeftButtonUp="imgChart_MouseLeftButtonUp" MouseMove="imgChart_MouseMove" Width="408"/>
+                </Border>
+            </StackPanel>
         </Grid>
         <!-- #endregion -->
         <!-- #region STATUS BAR -->

@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ASI"
         mc:Ignorable="d"
-        Title="Options" Height="Auto" Width="500" WindowStartupLocation="CenterScreen" WindowStyle="ToolWindow">
+        Title="Options" Height="Auto" Width="500" WindowStartupLocation="CenterScreen" ResizeMode="NoResize" WindowStyle="ToolWindow">
     <Window.Resources>
         <!-- #region STATIC RES: TITLE-->
         <Style TargetType="TextBlock" x:Key="StatusBarTitleTxtStyle">
@@ -18,7 +18,13 @@
             <TextBlock Text="Configure the settings of the application:" />
             <TabControl TabStripPlacement="Left" Margin="0,5,0,0" Height="Auto">
                 <!-- #region Airport data -->
-                <TabItem Header="Airport data">
+                <TabItem Style="{StaticResource OptionsTabItem}">
+                    <TabItem.Header>
+                        <StackPanel Orientation="Horizontal" Margin="5,5,5,5">
+                            <Image Source="/Icons/48x48_black_info.png"/>
+                            <TextBlock Text="Airport data" VerticalAlignment="Center" Margin="5,0,0,0"/>
+                        </StackPanel>
+                    </TabItem.Header>
                     <Grid>
                         <StackPanel Orientation="Vertical" Margin="5,5,5,5">
                             <TextBlock FontWeight="SemiBold" Text="Choose a service for airport information and runways:" Margin="0,0,0,5"/>
@@ -30,7 +36,13 @@
                 </TabItem>
                 <!-- #endregion -->
                 <!-- #region Frequencies -->
-                <TabItem Header="Radio Frequencies">
+                <TabItem Style="{StaticResource OptionsTabItem}">
+                    <TabItem.Header>
+                        <StackPanel Orientation="Horizontal" Margin="5,5,5,5">
+                            <Image Source="/Icons/48x48_black_frequency.png"/>
+                            <TextBlock Text="Frequencies" Margin="5,0,0,0" VerticalAlignment="Center"/>
+                        </StackPanel>
+                    </TabItem.Header>
                     <Grid>
                         <StackPanel Orientation="Vertical" Margin="5,5,5,5">
                             <TextBlock FontWeight="SemiBold" Text="Choose a service for radio frequencies:"/>
@@ -41,7 +53,13 @@
                 </TabItem>
                 <!-- #endregion -->
                 <!-- #region Charts -->
-                <TabItem Header="Charts">
+                <TabItem Style="{StaticResource OptionsTabItem}">
+                    <TabItem.Header>
+                        <StackPanel Orientation="Horizontal" Margin="5,5,5,5">
+                            <Image Source="/Icons/48x48_black_route.png"/>
+                            <TextBlock Text="Charts        " Margin="5,0,0,0" VerticalAlignment="Center"/>
+                        </StackPanel>
+                    </TabItem.Header>
                     <Grid>
                         <StackPanel Orientation="Vertical" Margin="5,5,5,5">
                             <StackPanel Orientation="Vertical">
@@ -56,7 +74,13 @@
                 </TabItem>
                 <!-- #endregion -->
                 <!-- #region METAR -->
-                <TabItem Header="METAR">
+                <TabItem Style="{StaticResource OptionsTabItem}">
+                    <TabItem.Header>
+                        <StackPanel Orientation="Horizontal" Margin="5,5,5,5">
+                            <Image Source="/Icons/48x48_black_weather.png"/>
+                            <TextBlock Text="Weather     " Margin="5,0,0,0" VerticalAlignment="Center"/>
+                        </StackPanel>
+                    </TabItem.Header>
                     <StackPanel Orientation="Vertical" Margin="5,5,5,5">
                         <TextBlock FontWeight="SemiBold" Text="Choose a service for weather data:"/>
                         <RadioButton Margin="0,5,0,0" Name="rbtnWeatherAvwx" GroupName="METAR" Content="AVWX"/>
@@ -67,7 +91,13 @@
                 </TabItem>
                 <!-- #endregion -->
                 <!-- #region ATIS -->
-                <TabItem Header="ATIS">
+                <TabItem Style="{StaticResource OptionsTabItem}">
+                    <TabItem.Header>
+                        <StackPanel Orientation="Horizontal" Margin="5,5,5,5">
+                            <Image Source="/Icons/48x48_black_atis.png" Height="18" Width="18"/>
+                            <TextBlock Text=" ATIS          " Margin="5,0,0,0" VerticalAlignment="Center"/>
+                        </StackPanel>
+                    </TabItem.Header>
                     <StackPanel Orientation="Vertical" Margin="5,5,5,5">
                         <TextBlock FontWeight="SemiBold" Text="Choose a source for ATIS data:"/>
                         <RadioButton Margin="0,5,0,0" Name="rbtnAtisIvao" GroupName="ATIS" Content="IVAO"/>
@@ -76,7 +106,13 @@
                 </TabItem>
                 <!-- #endregion -->
                 <!-- #region Units of measurements -->
-                <TabItem Header="Units">
+                <TabItem Style="{StaticResource OptionsTabItem}">
+                    <TabItem.Header>
+                        <StackPanel Orientation="Horizontal" Margin="5,5,5,5">
+                            <Image Source="/Icons/48x48_black_unit.png"/>
+                            <TextBlock Text="Units          " Margin="5,0,0,0" VerticalAlignment="Center"/>
+                        </StackPanel> 
+                    </TabItem.Header>
                     <Grid>
                         <StackPanel Orientation="Vertical" Margin="5,5,5,5">
                             <StackPanel Orientation="Horizontal">
@@ -133,7 +169,13 @@
                 </TabItem>
                 <!-- #endregion -->
                 <!-- #region Graphics -->
-                <TabItem Header="Graphics">
+                <TabItem Style="{StaticResource OptionsTabItem}">
+                    <TabItem.Header>
+                        <StackPanel Orientation="Horizontal" Margin="5,5,5,5">
+                            <Image Source="/Icons/48x48_black_graphics.png"/>
+                            <TextBlock Text="Graphics    " Margin="5,0,0,0" VerticalAlignment="Center"/>
+                        </StackPanel>
+                    </TabItem.Header>
                     <Grid>
                         <StackPanel Orientation="Vertical" Margin="5,5,5,5">
                             <CheckBox Name="chkShowWindOnRunway" Content="Show wind arrow on runway"/>
@@ -142,7 +184,13 @@
                 </TabItem>
                 <!-- #endregion -->
                 <!-- #region Login to services -->
-                <TabItem Header="Login to services">
+                <TabItem Style="{StaticResource OptionsTabItem}">
+                    <TabItem.Header>
+                        <StackPanel Orientation="Horizontal" Margin="5,5,5,5">
+                            <Image Source="/Icons/48x48_black_services.png"/>
+                            <TextBlock Text="Services    " Margin="5,0,0,0" VerticalAlignment="Center"/>
+                        </StackPanel>
+                    </TabItem.Header>
                     <Grid>
                         <StackPanel Orientation="Vertical" Margin="5,5,5,5">
                             <GroupBox Header="Airport data">
@@ -151,14 +199,14 @@
                                     <TextBlock FontWeight="SemiBold" Text="AVWX Services"/>
                                     <StackPanel Orientation="Horizontal" Margin="0,5,0,0">
                                         <TextBlock Text="Token:"/>
-                                        <TextBox FontFamily="Consolas" FontSize="13" Name="txbAvwxToken" Margin="5,0,0,0" Width="285"/>
+                                        <TextBox FontFamily="Consolas" FontSize="13" Name="txbAvwxToken" Margin="5,0,0,0" Width="277"/>
                                     </StackPanel>
                                     <TextBlock Text="Get your own AVWX free token here" Margin="40,0,0,0" TextDecorations="Underline" Foreground="#0000FF" MouseLeftButtonUp="GetFreeAVWXToken_Click"/>
                                     <!-- OpenAIP -->
                                     <TextBlock FontWeight="SemiBold" Text="OpenAIP Services" Margin="0,5,0,0"/>
                                     <StackPanel Orientation="Horizontal" Margin="0,5,0,0">
                                         <TextBlock Text="Token:"/>
-                                        <TextBox FontFamily="Consolas" FontSize="13" Name="txbOpenAipToken" Margin="5,0,0,0" Width="285"/>
+                                        <TextBox FontFamily="Consolas" FontSize="13" Name="txbOpenAipToken" Margin="5,0,0,0" Width="277"/>
                                     </StackPanel>
                                     <TextBlock Text="Get your own OpenAIP free token here" Margin="40,0,0,0" TextDecorations="Underline" Foreground="#0000FF" MouseLeftButtonUp="GetFreeOpenAipToken_Click"/>
                                 </StackPanel>
@@ -173,7 +221,7 @@
                                             <TextBlock Text="Password:" Margin="0,7,0,0"/>
                                         </StackPanel>
                                         <StackPanel Orientation="Vertical" Margin="0,5,0,0">
-                                            <TextBox FontFamily="Consolas" FontSize="13" Name="txbJeppesenUser" Margin="5,0,0,0" Width="265"/>
+                                            <TextBox FontFamily="Consolas" FontSize="13" Name="txbJeppesenUser" Margin="5,0,0,0" Width="260"/>
                                             <TextBox FontFamily="Consolas" FontSize="13" Name="txbJeppesenPassword" Margin="5,5,0,0"/>
                                         </StackPanel>
                                     </StackPanel>
@@ -185,7 +233,7 @@
                                             <TextBlock Text="Password:" Margin="0,7,0,0"/>
                                         </StackPanel>
                                         <StackPanel Orientation="Vertical" Margin="0,5,0,0">
-                                            <TextBox FontFamily="Consolas" FontSize="13" Name="txbLidoUser" Margin="5,0,0,0" Width="265"/>
+                                            <TextBox FontFamily="Consolas" FontSize="13" Name="txbLidoUser" Margin="5,0,0,0" Width="260"/>
                                             <TextBox FontFamily="Consolas" FontSize="13" Name="txbLidoPassword" Margin="5,5,0,0"/>
                                         </StackPanel>
                                     </StackPanel>

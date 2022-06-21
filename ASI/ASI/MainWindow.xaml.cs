@@ -95,19 +95,6 @@ namespace ASI
         }
         #endregion
 
-        #region Top Menu
-        private void MenuQuit_Click(object sender, RoutedEventArgs e)
-        {
-            this.Close();
-        }
-        private void MenuSettingsOptions_Click(object sender, RoutedEventArgs e)
-        {
-            WindowOptions preferencesWindow = new WindowOptions();
-            preferencesWindow.ShowDialog();
-            tabAirportInfo.Focus();
-        }
-        #endregion
-
         #region ToolBar
         private void ToolBarRefresh_Click(object sender, RoutedEventArgs e)
         {
@@ -160,6 +147,12 @@ namespace ASI
         private void ToolBarChartFolder_Click(object sender, RoutedEventArgs e)
         {
             System.Diagnostics.Process.Start(MainWindow.APP_SETTINGS.DATA_PATH_CHARTS);
+        }
+        private void ToolBarSettings_Click(object sender, RoutedEventArgs e)
+        {
+            WindowOptions preferencesWindow = new WindowOptions();
+            preferencesWindow.ShowDialog();
+            tabAirportInfo.Focus();
         }
         #endregion
 
@@ -460,58 +453,67 @@ namespace ASI
         }
         private async void GetStationInfo(string icao)
         {
-            if (APP_SETTINGS.IsInformationAVWX)
-                currentAirport = new Airport(await AVWXLib.GetStationInfo(icao, MainWindow.APP_SETTINGS.AVWX_TOKEN));
-            else if (APP_SETTINGS.IsInformationOpenAip)
-                currentAirport = new Airport(await OpenAipLib.GetAirportInfo(icao, MainWindow.APP_SETTINGS.OPENAIP_TOKEN));
-            //Showing station information
-            txtAirportTitle.Text = currentAirport.Name;
-            txtCity.Text = currentAirport.City;
-            txtCountry.Text = currentAirport.Country;
-            if (MainWindow.APP_SETTINGS.UNIT_ELEV == "M")
-                txtElevation.Text = currentAirport.Elevation + " m";
-            else if (MainWindow.APP_SETTINGS.UNIT_ELEV == "FT")
-                txtElevation.Text = MetersToFeet(currentAirport.Elevation) + " ft";
-            else if (MainWindow.APP_SETTINGS.UNIT_ELEV == "YD")
-                txtElevation.Text = MetersToYards(Convert.ToInt16(currentAirport.Elevation)) + " yd";
-            txtIATA.Text = currentAirport.IATACode;
-            txtLatitude.Text = $"{currentAirport.Latitude} °N";
-            txtLongitude.Text = $"{currentAirport.Longitude} °N";
-            txtNotes.Text = currentAirport.Notes;
-            txtWebsite.Text = currentAirport.Website;
-            //Showing Runway info
-            foreach (Runway r in currentAirport.Runways)
-                cbxRunways.Items.Add(r.Identification1 + "/" + r.Identification2);
-            cbxRunways.SelectedIndex = 0;
-            //Getting and showing ATIS
-            if (APP_SETTINGS.IsAtisIVAO)
+            try
             {
-                IVAOAtisLib.Atis airportAtis = await IVAOAtisLib.GetAtis(icao);
-                currentAirport.ATIS = airportAtis.Value;
-                txtATIS.Text = airportAtis.Value;
-                txtAtisCallsign.Text = airportAtis.Callsign;
-                txtAtisRevision.Text = airportAtis.Revision;
-                txtAtisTimestamp.Text = $"{airportAtis.Timestamp.Hour}:{airportAtis.Timestamp.Minute}";
-                txtAtisTimestampUTC.Text = $"{airportAtis.TimestampZulu.Hour}:{airportAtis.TimestampZulu.Minute}";
-            }
-            else
-                txtATIS.Text = "ATIS is not enabled. Check your settings.";
-            //Showing frequencies
-            if (APP_SETTINGS.IsInformationOpenAip && currentAirport.Frequencies != null)
-                grdFrequencies.ItemsSource = currentAirport.Frequencies;
-            else
-            {
-                try
+                if (APP_SETTINGS.IsInformationAVWX)
+                    currentAirport = new Airport(await AVWXLib.GetStationInfo(icao, MainWindow.APP_SETTINGS.AVWX_TOKEN));
+                else if (APP_SETTINGS.IsInformationOpenAip)
+                    currentAirport = new Airport(await OpenAipLib.GetAirportInfo(icao, MainWindow.APP_SETTINGS.OPENAIP_TOKEN));
+                //Showing station information
+                txtAirportTitle.Text = currentAirport.Name;
+                txtCity.Text = currentAirport.City;
+                txtCountry.Text = currentAirport.Country;
+                if (MainWindow.APP_SETTINGS.UNIT_ELEV == "M")
+                    txtElevation.Text = currentAirport.Elevation + " m";
+                else if (MainWindow.APP_SETTINGS.UNIT_ELEV == "FT")
+                    txtElevation.Text = MetersToFeet(currentAirport.Elevation) + " ft";
+                else if (MainWindow.APP_SETTINGS.UNIT_ELEV == "YD")
+                    txtElevation.Text = MetersToYards(Convert.ToInt16(currentAirport.Elevation)) + " yd";
+                txtIATA.Text = currentAirport.IATACode;
+                txtLatitude.Text = $"{currentAirport.Latitude} °N";
+                txtLongitude.Text = $"{currentAirport.Longitude} °N";
+                txtNotes.Text = currentAirport.Notes;
+                txtWebsite.Text = currentAirport.Website;
+                //Showing Runway info
+                foreach (Runway r in currentAirport.Runways)
+                    cbxRunways.Items.Add(r.Identification1 + "/" + r.Identification2);
+                cbxRunways.SelectedIndex = 0;
+                //Getting and showing ATIS
+                if (APP_SETTINGS.IsAtisIVAO)
                 {
-                    Airport airportData = new Airport(await OpenAipLib.GetAirportInfo(currentAirport.ICAOCode, APP_SETTINGS.OPENAIP_TOKEN));
-                    if (airportData.Frequencies != null)
+                    try
                     {
-                        currentAirport.Frequencies = airportData.Frequencies;
-                        grdFrequencies.ItemsSource = currentAirport.Frequencies;
+                        IVAOAtisLib.Atis airportAtis = await IVAOAtisLib.GetAtis(icao);
+                        currentAirport.ATIS = airportAtis.Value;
+                        txtATIS.Text = airportAtis.Value;
+                        txtAtisCallsign.Text = airportAtis.Callsign;
+                        txtAtisRevision.Text = airportAtis.Revision;
+                        txtAtisTimestamp.Text = $"{airportAtis.Timestamp.Hour}:{airportAtis.Timestamp.Minute}";
+                        txtAtisTimestampUTC.Text = $"{airportAtis.TimestampZulu.Hour}:{airportAtis.TimestampZulu.Minute}";
                     }
+                    catch (Exception ex) { HandleWarning("Unable to get ATIS from IVAO\n\nError:\n" + ex.Message); }
                 }
-                catch (Exception) { MessageBox.Show("An error occurred while searching for frequencies in use. Your request has been closed by OpenAIP server.", "Errore", MessageBoxButton.OK, MessageBoxImage.Asterisk); }
+                else
+                    txtATIS.Text = "ATIS is not enabled. Check your settings.";
+                //Showing frequencies
+                if (APP_SETTINGS.IsInformationOpenAip && currentAirport.Frequencies != null)
+                    grdFrequencies.ItemsSource = currentAirport.Frequencies;
+                else
+                {
+                    try
+                    {
+                        Airport airportData = new Airport(await OpenAipLib.GetAirportInfo(currentAirport.ICAOCode, APP_SETTINGS.OPENAIP_TOKEN));
+                        if (airportData.Frequencies != null)
+                        {
+                            currentAirport.Frequencies = airportData.Frequencies;
+                            grdFrequencies.ItemsSource = currentAirport.Frequencies;
+                        }
+                    }
+                    catch (Exception) { MessageBox.Show("An error occurred while searching for frequencies in use. Your request has been closed by OpenAIP server.", "Errore", MessageBoxButton.OK, MessageBoxImage.Asterisk); }
+                }
             }
+            catch (System.Net.WebException) { HandleWarning("Please insert a valid ICAO code."); }
+            catch (Exception ex) { HandleException(ex); }
         }
         private async void GetStationMetarTaf(string icao)
         {
@@ -648,7 +650,9 @@ namespace ASI
                     txtWeatherVisibility.Text = "Ceiling and Visibility OK";
                 else
                 {
-                    if (MainWindow.APP_SETTINGS.UNIT_VISIB == "M" && metarInfo.Visibility.PrevailingVisibility.ActualUnit.ToString().ToLower() == "statutemile")
+                    if (MainWindow.APP_SETTINGS.UNIT_VISIB == "M" && metarInfo.Visibility.PrevailingVisibility.ActualUnit.ToString().ToLower() == "meter")
+                        txtWeatherVisibility.Text = metarInfo.Visibility.PrevailingVisibility.ActualValue + " m";
+                    else if (MainWindow.APP_SETTINGS.UNIT_VISIB == "M" && metarInfo.Visibility.PrevailingVisibility.ActualUnit.ToString().ToLower() == "statutemile")
                         txtWeatherVisibility.Text = MilesToMeters(metarInfo.Visibility.PrevailingVisibility.ActualValue) + " m";
                     else if (MainWindow.APP_SETTINGS.UNIT_VISIB == "MI" && metarInfo.Visibility.PrevailingVisibility.ActualUnit.ToString().ToLower() == "statutemile")
                         txtWeatherVisibility.Text = metarInfo.Visibility.PrevailingVisibility.ActualValue + " mi";

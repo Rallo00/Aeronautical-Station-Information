@@ -4,6 +4,7 @@
              xmlns:local="clr-namespace:ASI"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
+        <ResourceDictionary Source="GraphicsDictionary.xaml"/>
     </Application.Resources>
 </Application>
 
