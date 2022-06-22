@@ -33,8 +33,6 @@ namespace ASI
         public MainWindow()
         {
             InitializeComponent();
-            //Loading
-            LoadSettings(MainWindow.APP_SETTINGS.DATA_PATH_SETTINGS);
             WindowStartupLocation = System.Windows.WindowStartupLocation.CenterScreen;
             TimeClock.Tick += new EventHandler(TimeClock_Tick);
             TimeClock.Interval = new TimeSpan(0, 0, 1);
@@ -81,15 +79,15 @@ namespace ASI
         #endregion
 
         #region Exceptions and messages
-        private void HandleException(Exception ex)
+        public static void HandleException(Exception ex)
         {
             MessageBox.Show(ex.Message, "Unhandled error", MessageBoxButton.OK, MessageBoxImage.Error);
         }
-        private void HandleWarning(string msg)
+        public static void HandleWarning(string msg)
         {
             MessageBox.Show(msg, "Warning", MessageBoxButton.OK, MessageBoxImage.Warning);
         }
-        private void HandleMessage(string msg, string title)
+        public static void HandleMessage(string msg, string title)
         {
             MessageBox.Show(msg, title, MessageBoxButton.OK, MessageBoxImage.Information);
         }
@@ -99,7 +97,7 @@ namespace ASI
         private void ToolBarRefresh_Click(object sender, RoutedEventArgs e)
         {
             //Loading
-            LoadSettings(MainWindow.APP_SETTINGS.DATA_PATH_SETTINGS);
+            APP_SETTINGS = new Settings();
             AIRACdetails();
             ClearGUIvalues();
             txbSearchICAO.Focus();
@@ -542,6 +540,9 @@ namespace ASI
         }
         private void GetStationCharts(string icao)
         {
+            if (MainWindow.APP_SETTINGS.IsChartServiceJeppesen) JeppChart = new ChartJeppesen(MainWindow.APP_SETTINGS.JP_USER, MainWindow.APP_SETTINGS.JP_PASSWORD, MainWindow.APP_SETTINGS.DATA_PATH_CHARTS);
+            else if (MainWindow.APP_SETTINGS.IsChartServiceLido) lidoChart = new ChartLufthansa(MainWindow.APP_SETTINGS.LD_USER, MainWindow.APP_SETTINGS.LD_PASSWORD);
+
             if (JeppChart != null && MainWindow.APP_SETTINGS.IsChartServiceJeppesen)
             {
                 var task = Task.Run(() =>
@@ -667,121 +668,6 @@ namespace ASI
                 txtWeatherClouds.Text = (metarInfo.Clouds.Count > 0) ? clouds : "No clouds";
             }
         }
-        #endregion
-
-        #region Settings
-        private void LoadSettings(string path)
-        {
-            StreamReader reader = null;
-            try
-            {
-                reader = new StreamReader(path);
-                while (!reader.EndOfStream)
-                {
-                    string line = reader.ReadLine();
-                    ParseLine(line);
-                }
-                reader.Close();
-            }
-            catch (FileNotFoundException) { HandleWarning("This is your first launch, go to settings and set the program preferences."); }
-            catch (Exception ex) { HandleException(ex); }
-            finally { if (reader != null) reader.Close(); }
-
-            //Authenticating Jeppesen
-            if (MainWindow.APP_SETTINGS.JP_USER != null && MainWindow.APP_SETTINGS.JP_PASSWORD != null)
-            {
-                try { JeppChart = new ChartJeppesen(MainWindow.APP_SETTINGS.JP_USER, MainWindow.APP_SETTINGS.JP_PASSWORD, MainWindow.APP_SETTINGS.DATA_PATH_CHARTS); }
-                catch (Exception) { APP_SETTINGS.IsChartServiceJeppesen = false; }
-                imgChartAvailability.Source = new BitmapImage(new Uri("/Icons/48x48_chartsonline.png", UriKind.Relative));
-            }
-            //Authenticating Lido
-            if (MainWindow.APP_SETTINGS.LD_USER != null && MainWindow.APP_SETTINGS.LD_PASSWORD != null)
-            {
-                lidoChart = new ChartLufthansa(MainWindow.APP_SETTINGS.LD_USER, MainWindow.APP_SETTINGS.LD_PASSWORD, MainWindow.APP_SETTINGS.DATA_PATH_CHARTS, 120);
-                while (true) { try { lidoChart.SetConfig(lidoChart.SystemConfig); break; } catch (ArgumentException) { } }
-                imgChartAvailability.Source = new BitmapImage(new Uri("/Icons/48x48_chartsonline.png", UriKind.Relative));
-            }
-        }
-        private void ParseLine(string line)
-        {
-            string attribute = line.Split('=')[0];
-            string value = line.Split('=')[1];
-            switch (attribute)
-            {
-                case "JEPPESEN":
-                    MainWindow.APP_SETTINGS.IsChartServiceJeppesen = value != "0";
-                    break;
-                case "LIDO":
-                    MainWindow.APP_SETTINGS.IsChartServiceLido = value != "0";
-                    break;
-                case "INFO_AVWX":
-                    MainWindow.APP_SETTINGS.IsInformationAVWX = value != "0";
-                    break;
-                case "INFO_OPENAIP":
-                    MainWindow.APP_SETTINGS.IsInformationOpenAip= value != "0";
-                    break;
-                case "WEATHER_AVWX":
-                    MainWindow.APP_SETTINGS.IsWeatherAVWX = value != "0";
-                    break;
-                case "WEATHER_IVAO":
-                    MainWindow.APP_SETTINGS.IsWeatherIVAO = value != "0";
-                    break;
-                case "WEATHER_NOAA":
-                    MainWindow.APP_SETTINGS.IsWeatherNOAA = value != "0";
-                    break;
-                case "RADIO_OPENAIP":
-                    MainWindow.APP_SETTINGS.IsFrequenciesOpenAip = value != "0";
-                    break;
-                case "ATIS_IVAO":
-                    MainWindow.APP_SETTINGS.IsAtisIVAO = value != "0";
-                    break;
-                case "JP_USER":
-                    if (!string.IsNullOrEmpty(value) && value != " ")
-                        MainWindow.APP_SETTINGS.JP_USER = value;
-                    break;
-                case "JP_PASSWORD":
-                    if (!string.IsNullOrEmpty(value) && value != " ")
-                        MainWindow.APP_SETTINGS.JP_PASSWORD = value;
-                    break;
-                case "LD_USER":
-                    if (!string.IsNullOrEmpty(value) && value != " ")
-                        MainWindow.APP_SETTINGS.LD_USER = value;
-                    break;
-                case "LD_PASSWORD":
-                    if (!string.IsNullOrEmpty(value) && value != " ")
-                        MainWindow.APP_SETTINGS.LD_PASSWORD = value;
-                    break;
-                case "AVWX_TOKEN":
-                    if (!string.IsNullOrEmpty(value) && value != " ")
-                        MainWindow.APP_SETTINGS.AVWX_TOKEN = value;
-                    break;
-                case "UNIT_DIST":
-                    MainWindow.APP_SETTINGS.UNIT_DIST = value;
-                    break;
-                case "UNIT_RWY":
-                    MainWindow.APP_SETTINGS.UNIT_RWY = value;
-                    break;
-                case "UNIT_WIND":
-                    MainWindow.APP_SETTINGS.UNIT_WIND = value;
-                    break;
-                case "UNIT_ELEV":
-                    MainWindow.APP_SETTINGS.UNIT_ELEV = value;
-                    break;
-                case "UNIT_TEMP":
-                    MainWindow.APP_SETTINGS.UNIT_TEMP = value;
-                    break;
-                case "UNIT_PRES":
-                    MainWindow.APP_SETTINGS.UNIT_PRES = value;
-                    break;
-                case "UNIT_VISIB":
-                    MainWindow.APP_SETTINGS.UNIT_VISIB = value;
-                    break;
-                case "GR_RWY_WIND":
-                    MainWindow.APP_SETTINGS.ShowWindOnRunway = (value == "1");
-                    break;
-            }
-        }
-
         #endregion
 
         #region Units conversion

@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ASI"
         mc:Ignorable="d"
-        Title="Options" Height="Auto" Width="500" WindowStartupLocation="CenterScreen" ResizeMode="NoResize" WindowStyle="ToolWindow">
+        Title="Options" Height="435" Width="500" WindowStartupLocation="CenterScreen" ResizeMode="NoResize" WindowStyle="ToolWindow">
     <Window.Resources>
         <!-- #region STATIC RES: TITLE-->
         <Style TargetType="TextBlock" x:Key="StatusBarTitleTxtStyle">
@@ -14,6 +14,9 @@
         <!-- #endregion -->
     </Window.Resources>
     <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
         <StackPanel Orientation="Vertical" Margin="5,5,5,5">
             <TextBlock Text="Configure the settings of the application:" />
             <TabControl TabStripPlacement="Left" Margin="0,5,0,0" Height="Auto">
@@ -101,7 +104,7 @@
                     <StackPanel Orientation="Vertical" Margin="5,5,5,5">
                         <TextBlock FontWeight="SemiBold" Text="Choose a source for ATIS data:"/>
                         <RadioButton Margin="0,5,0,0" Name="rbtnAtisIvao" GroupName="ATIS" Content="IVAO"/>
-                        <RadioButton Margin="0,5,0,0" Name="rbtnAtisNo" GroupName="ATIS" Content="Do not retrieve ATIS data"/>
+                        <RadioButton Margin="0,5,0,0" Name="rbtnAtisNo" GroupName="ATIS" Content="Do not retrieve ATIS data" IsChecked="True"/>
                     </StackPanel>
                 </TabItem>
                 <!-- #endregion -->
@@ -111,20 +114,20 @@
                         <StackPanel Orientation="Horizontal" Margin="5,5,5,5">
                             <Image Source="/Icons/48x48_black_unit.png"/>
                             <TextBlock Text="Units          " Margin="5,0,0,0" VerticalAlignment="Center"/>
-                        </StackPanel> 
+                        </StackPanel>
                     </TabItem.Header>
                     <Grid>
                         <StackPanel Orientation="Vertical" Margin="5,5,5,5">
                             <StackPanel Orientation="Horizontal">
                                 <StackPanel Orientation="Vertical" Margin="5,0,0,0">
-                                    <TextBlock Style="{StaticResource StatusBarTitleTxtStyle}" Text="Set the scale for distance:"/>
+                                    <TextBlock Style="{StaticResource StatusBarTitleTxtStyle}" Text="Set the unit for distance:"/>
                                     <RadioButton Name="rbtnDistM" GroupName="distance" Content="Meters (m)" Margin="0,2,0,0"/>
                                     <RadioButton Name="rbtnDistFt" GroupName="distance" Content="Feet (ft)" Margin="0,2,0,0"/>
                                     <RadioButton Name="rbtnDistYd" GroupName="distance" Content="Yards (yd)" Margin="0,2,0,0"/>
                                     <RadioButton Name="rbtnDistNm" GroupName="distance" Content="Nautical miles (nm)" Margin="0,2,0,0" IsChecked="True"/>
                                 </StackPanel>
                                 <StackPanel Orientation="Vertical" Margin="50,0,5,0">
-                                    <TextBlock Style="{StaticResource StatusBarTitleTxtStyle}" Text="Set the scale for runway length:"/>
+                                    <TextBlock Style="{StaticResource StatusBarTitleTxtStyle}" Text="Set the unit for runway length:"/>
                                     <RadioButton Name="rbtnRwyM" GroupName="runwayDistance" Content="Meters (m)" Margin="0,2,0,0" IsChecked="True"/>
                                     <RadioButton Name="rbtnRwyFt" GroupName="runwayDistance" Content="Feet (ft)" Margin="0,2,0,0"/>
                                     <RadioButton Name="rbtnRwyYd" GroupName="runwayDistance" Content="Yards (yd)" Margin="0,2,0,0"/>
@@ -132,14 +135,14 @@
                             </StackPanel>
                             <StackPanel Orientation="Horizontal" Margin="0,5,0,0">
                                 <StackPanel Orientation="Vertical" Margin="5,0,0,0">
-                                    <TextBlock Style="{StaticResource StatusBarTitleTxtStyle}" Text="Set the scale for wind speed:"/>
-                                    <RadioButton Name="rbtnWindMs" GroupName="windSpeed" Content="Meters per second (m/s)" Margin="0,2,0,0"/>
+                                    <TextBlock Style="{StaticResource StatusBarTitleTxtStyle}" Text="Set the unit for wind speed:"/>
+                                    <RadioButton Name="rbtnWindMs" GroupName="windSpeed" Content="Meters per second (mps)" Margin="0,2,0,0"/>
                                     <RadioButton Name="rbtnWindKph" GroupName="windSpeed" Content="Kilometers per hour (kph)" Margin="0,2,0,0"/>
                                     <RadioButton Name="rbtnWindMph" GroupName="windSpeed" Content="Miles per hour (mph)" Margin="0,2,0,0"/>
                                     <RadioButton Name="rbtnWindKts" GroupName="windSpeed" Content="Knots (kts)" Margin="0,2,0,0" IsChecked="True"/>
                                 </StackPanel>
                                 <StackPanel Orientation="Vertical" Margin="33,0,0,0">
-                                    <TextBlock Style="{StaticResource StatusBarTitleTxtStyle}" Text="Set scale for rwy elevation:"/>
+                                    <TextBlock Style="{StaticResource StatusBarTitleTxtStyle}" Text="Set unit for rwy elevation:"/>
                                     <RadioButton Name="rbtnRwyElM" GroupName="runwayElevation" Content="Meters (m)" Margin="0,2,0,0"/>
                                     <RadioButton Name="rbtnRwyElFt" GroupName="runwayElevation" Content="Feet (ft)" Margin="0,2,0,0" IsChecked="True"/>
                                     <RadioButton Name="rbtnRwyElYd" GroupName="runwayElevation" Content="Yards (yd)" Margin="0,2,0,0"/>
@@ -147,19 +150,19 @@
                             </StackPanel>
                             <StackPanel Orientation="Horizontal">
                                 <StackPanel Orientation="Vertical" Margin="5,5,0,0">
-                                    <TextBlock Style="{StaticResource StatusBarTitleTxtStyle}" Text="Set scale for temperature:"/>
+                                    <TextBlock Style="{StaticResource StatusBarTitleTxtStyle}" Text="Set unit for temperature:"/>
                                     <RadioButton Name="rbtnTempC" GroupName="temperature" Content="Celsius (C)" Margin="0,2,0,0" IsChecked="True"/>
                                     <RadioButton Name="rbtnTempF" GroupName="temperature" Content="Fahrenheit (F)" Margin="0,2,0,0"/>
                                 </StackPanel>
                                 <StackPanel Orientation="Vertical" Margin="48,5,0,0">
-                                    <TextBlock Style="{StaticResource StatusBarTitleTxtStyle}" Text="Set scale for pressure:"/>
+                                    <TextBlock Style="{StaticResource StatusBarTitleTxtStyle}" Text="Set unit for pressure:"/>
                                     <RadioButton Name="rbtnPresHpa" GroupName="pressure" Content="HectoPascal (hPa)" Margin="0,2,0,0" IsChecked="True"/>
                                     <RadioButton Name="rbtnPresInhg" GroupName="pressure" Content="Inches of mercury (inHg)" Margin="0,2,0,0"/>
                                 </StackPanel>
                             </StackPanel>
                             <StackPanel Orientation="Horizontal">
                                 <StackPanel Orientation="Vertical" Margin="5,5,0,0">
-                                    <TextBlock Style="{StaticResource StatusBarTitleTxtStyle}" Text="Set scale for visibility:"/>
+                                    <TextBlock Style="{StaticResource StatusBarTitleTxtStyle}" Text="Set unit for visibility:"/>
                                     <RadioButton Name="rbtnVisibM" GroupName="visibility" Content="Meters (m)" Margin="0,2,0,0" IsChecked="True"/>
                                     <RadioButton Name="rbtnVisibMi" GroupName="visibility" Content="Miles (mi)" Margin="0,2,0,0"/>
                                 </StackPanel>
