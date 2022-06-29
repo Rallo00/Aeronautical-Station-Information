@@ -97,7 +97,7 @@
                 <TabItem Style="{StaticResource OptionsTabItem}">
                     <TabItem.Header>
                         <StackPanel Orientation="Horizontal" Margin="5,5,5,5">
-                            <Image Source="/Icons/48x48_black_atis.png" Height="18" Width="18"/>
+                            <Image Source="/Icons/48x48_black_atis.png"/>
                             <TextBlock Text=" ATIS          " Margin="5,0,0,0" VerticalAlignment="Center"/>
                         </StackPanel>
                     </TabItem.Header>

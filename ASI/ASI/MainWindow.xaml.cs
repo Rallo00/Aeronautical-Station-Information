@@ -9,6 +9,7 @@ using System.Windows.Threading;
 using System.IO;
 using System.Threading.Tasks;
 using System.Globalization;
+using System.Linq;
 
 namespace ASI
 {
@@ -30,6 +31,7 @@ namespace ASI
         private List<ChartJeppesen.Chart> lastDownloadedJeppCharts = new List<ChartJeppesen.Chart>();
         private List<ChartLufthansa.Chart> lastDownloadedLidoCharts = new List<ChartLufthansa.Chart>();
         csharp_metar_decoder.entity.DecodedMetar metarInfo = null;
+        public static string IcaoFromBookmarks = null;
         public MainWindow()
         {
             InitializeComponent();
@@ -151,6 +153,36 @@ namespace ASI
             WindowOptions preferencesWindow = new WindowOptions();
             preferencesWindow.ShowDialog();
             tabAirportInfo.Focus();
+        }
+        private void ToolBarFavourite_Click(object sender, RoutedEventArgs e)
+        {
+            //If already favourite, cancel
+            if (currentAirport.IsFavourite)
+            {
+                APP_SETTINGS.RemoveFavourite(currentAirport.ICAOCode.ToUpper());
+                if (currentAirport != null)
+                    currentAirport.IsFavourite = false;
+                imgToolbarBtnFavourite.Source = new BitmapImage(new Uri(APP_SETTINGS.GetApplicationFolderPath() + "\\Icons\\48x48_bookmark_empty.png", UriKind.Absolute));
+            }
+            else //Not favourite, add new
+            {
+                APP_SETTINGS.AddFavourite(currentAirport.ICAOCode.ToUpper());
+                if (currentAirport != null)
+                    currentAirport.IsFavourite = true;
+                imgToolbarBtnFavourite.Source = new BitmapImage(new Uri(APP_SETTINGS.GetApplicationFolderPath() + "\\Icons\\48x48_bookmark_full.png", UriKind.Absolute));
+            }
+        }
+        private void ToolBarFavourites_Click(object sender, RoutedEventArgs e)
+        {
+            Bookmarks formBookmarks = new Bookmarks();
+            formBookmarks.ShowDialog();
+            if (IcaoFromBookmarks != null)
+            {
+                txbSearchICAO.Text = IcaoFromBookmarks;
+                IcaoFromBookmarks = null;
+                btnSearchICAO_Click(sender, e);
+
+            }
         }
         #endregion
 
@@ -458,24 +490,27 @@ namespace ASI
                 else if (APP_SETTINGS.IsInformationOpenAip)
                     currentAirport = new Airport(await OpenAipLib.GetAirportInfo(icao, MainWindow.APP_SETTINGS.OPENAIP_TOKEN));
                 //Showing station information
-                txtAirportTitle.Text = currentAirport.Name;
-                txtCity.Text = currentAirport.City;
-                txtCountry.Text = currentAirport.Country;
-                if (MainWindow.APP_SETTINGS.UNIT_ELEV == "M")
-                    txtElevation.Text = currentAirport.Elevation + " m";
-                else if (MainWindow.APP_SETTINGS.UNIT_ELEV == "FT")
-                    txtElevation.Text = MetersToFeet(currentAirport.Elevation) + " ft";
-                else if (MainWindow.APP_SETTINGS.UNIT_ELEV == "YD")
-                    txtElevation.Text = MetersToYards(Convert.ToInt16(currentAirport.Elevation)) + " yd";
-                txtIATA.Text = currentAirport.IATACode;
-                txtLatitude.Text = $"{currentAirport.Latitude} °N";
-                txtLongitude.Text = $"{currentAirport.Longitude} °N";
-                txtNotes.Text = currentAirport.Notes;
-                txtWebsite.Text = currentAirport.Website;
-                //Showing Runway info
-                foreach (Runway r in currentAirport.Runways)
-                    cbxRunways.Items.Add(r.Identification1 + "/" + r.Identification2);
-                cbxRunways.SelectedIndex = 0;
+                if (currentAirport != null)
+                {
+                    txtAirportTitle.Text = currentAirport.Name;
+                    txtCity.Text = currentAirport.City;
+                    txtCountry.Text = currentAirport.Country;
+                    if (MainWindow.APP_SETTINGS.UNIT_ELEV == "M")
+                        txtElevation.Text = currentAirport.Elevation + " m";
+                    else if (MainWindow.APP_SETTINGS.UNIT_ELEV == "FT")
+                        txtElevation.Text = MetersToFeet(currentAirport.Elevation) + " ft";
+                    else if (MainWindow.APP_SETTINGS.UNIT_ELEV == "YD")
+                        txtElevation.Text = MetersToYards(Convert.ToInt16(currentAirport.Elevation)) + " yd";
+                    txtIATA.Text = currentAirport.IATACode;
+                    txtLatitude.Text = $"{currentAirport.Latitude} °N";
+                    txtLongitude.Text = $"{currentAirport.Longitude} °N";
+                    txtNotes.Text = currentAirport.Notes;
+                    txtWebsite.Text = currentAirport.Website;
+                    //Showing Runway info
+                    foreach (Runway r in currentAirport.Runways)
+                        cbxRunways.Items.Add(r.Identification1 + "/" + r.Identification2);
+                    cbxRunways.SelectedIndex = 0;
+                }
                 //Getting and showing ATIS
                 if (APP_SETTINGS.IsAtisIVAO)
                 {
@@ -512,6 +547,16 @@ namespace ASI
             }
             catch (System.Net.WebException) { HandleWarning("Please insert a valid ICAO code."); }
             catch (Exception ex) { HandleException(ex); }
+            //Handle favourite (bookmark)
+            if (APP_SETTINGS.Favourites != null)
+                foreach (string s in APP_SETTINGS.Favourites)
+                    if (s == icao.ToUpper())
+                    {
+                        currentAirport.IsFavourite = true;
+                        imgToolbarBtnFavourite.Source = new BitmapImage(new Uri(APP_SETTINGS.GetApplicationFolderPath() + "\\Icons\\48x48_bookmark_full.png", UriKind.Absolute));
+                    }
+                    else
+                        imgToolbarBtnFavourite.Source = new BitmapImage(new Uri(APP_SETTINGS.GetApplicationFolderPath() + "\\Icons\\48x48_bookmark_empty.png", UriKind.Absolute));
         }
         private async void GetStationMetarTaf(string icao)
         {
@@ -561,7 +606,8 @@ namespace ASI
             {
                 var task = Task.Run(() =>
                 {
-                    lastDownloadedLidoCharts = lidoChart.GetAirportCharts(icao, false);
+                    try { lastDownloadedLidoCharts = lidoChart.GetAirportCharts(icao, false); }
+                    catch (Exception ex) { HandleException(ex); }
                 });
                 task.ContinueWith((t) =>
                 {

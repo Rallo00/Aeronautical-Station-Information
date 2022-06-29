@@ -17,7 +17,7 @@
     <!-- #region TOOLBAR BUTTON -->
     <Style TargetType="Button" x:Key="ToolBarBtnStyle">
         <Setter Property="Margin" Value="5,0,0,0"/>
-        <Setter Property="Width" Value="65"/>
+        <Setter Property="Width" Value="100"/>
         <Setter Property="Height" Value="60"/>
         <Setter Property="BorderBrush" Value="Transparent"/>
         <Setter Property="Background" Value="{StaticResource BlueDark}"/>
@@ -80,14 +80,14 @@
     <!-- #region CHART TOOLBAR GRID (Background) -->
     <Style TargetType="Grid" x:Key="ChartToolBarGrid">
         <Setter Property="Background" Value="{StaticResource Dark}"/>
-        <Setter Property="Height" Value="55"/>
+        <Setter Property="Height" Value="30"/>
     </Style>
     <!-- #endregion -->
     <!-- #region CHART BUTTON -->
     <Style TargetType="Button" x:Key="ChartBtnStyle">
         <Setter Property="Margin" Value="5,0,0,0"/>
         <Setter Property="Width" Value="65"/>
-        <Setter Property="Height" Value="45"/>
+        <Setter Property="Height" Value="30"/>
         <Setter Property="BorderBrush" Value="Transparent"/>
         <Setter Property="Background" Value="{StaticResource Dark}"/>
     </Style>
@@ -96,7 +96,7 @@
     <Style TargetType="ToggleButton" x:Key="ChartsToolBarToggleButton">
         <Setter Property="Margin" Value="5,0,0,0"/>
         <Setter Property="Width" Value="65"/>
-        <Setter Property="Height" Value="45"/>
+        <Setter Property="Height" Value="30"/>
         <Setter Property="BorderBrush" Value="Transparent"/>
         <Setter Property="Background" Value="{StaticResource Dark}"/>
     </Style>

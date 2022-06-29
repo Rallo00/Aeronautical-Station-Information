@@ -28,24 +28,10 @@
                                 <TextBlock Style="{StaticResource ToolBarBtnTxtStyle}" Text="Refresh" Margin="0,5,0,0"/>
                             </StackPanel>
                         </Button>
-                        <Separator Margin="-10,0,-15,0" Width="45" Height="5" RenderTransformOrigin="0.5,0.5">
-                            <Separator.RenderTransform>
-                                <TransformGroup>
-                                    <ScaleTransform/>
-                                    <SkewTransform/>
-                                    <RotateTransform Angle="90"/>
-                                    <TranslateTransform/>
-                                </TransformGroup>
-                            </Separator.RenderTransform>
-                        </Separator>
-                        <StackPanel Orientation="Vertical">
-                            <Image Name="imgChartAvailability" Width="65" Height="32" ToolTip="Charts availability. White are available. Empty are not available" Source="/Icons/48x48_chartsoffline.png" Margin="5,6,0,0"/>
-                            <TextBlock Style="{StaticResource ToolBarBtnTxtStyle}" Text="Availability" Margin="8,0,0,0"/>
-                        </StackPanel>
-                        <Button Style="{StaticResource ToolBarBtnStyle}" ToolTip="Open charts library folder." Margin="5,0,0,0" Click="ToolBarChartFolder_Click">
+                        <Button Style="{StaticResource ToolBarBtnStyle}" ToolTip="Open charts library folder." Margin="5,0,0,0" Click="ToolBarSettings_Click">
                             <StackPanel Orientation="Vertical">
-                                <Image Style="{StaticResource ToolBarImgStyle}" Source="Icons/48x48_folder.png"/>
-                                <TextBlock Style="{StaticResource ToolBarBtnTxtStyle}" Text="Cache" Margin="0,5,0,0"/>
+                                <Image Style="{StaticResource ToolBarImgStyle}" Source="Icons/48x48_settings.png"/>
+                                <TextBlock Style="{StaticResource ToolBarBtnTxtStyle}" Text="Settings" Margin="0,5,0,0"/>
                             </StackPanel>
                         </Button>
                         <Separator Margin="-10,0,-15,0" Width="45" Height="5" RenderTransformOrigin="0.5,0.5">
@@ -58,10 +44,16 @@
                                 </TransformGroup>
                             </Separator.RenderTransform>
                         </Separator>
-                        <Button Style="{StaticResource ToolBarBtnStyle}" ToolTip="Open charts library folder." Margin="5,0,0,0" Click="ToolBarSettings_Click">
+                        <Button Style="{StaticResource ToolBarBtnStyle}" ToolTip="Set airport/station as favourite." Margin="5,0,0,0" Click="ToolBarFavourite_Click">
                             <StackPanel Orientation="Vertical">
-                                <Image Style="{StaticResource ToolBarImgStyle}" Source="Icons/48x48_settings.png"/>
-                                <TextBlock Style="{StaticResource ToolBarBtnTxtStyle}" Text="Settings" Margin="0,5,0,0"/>
+                                <Image Style="{StaticResource ToolBarImgStyle}" Source="Icons/48x48_bookmark_empty.png" Name="imgToolbarBtnFavourite"/>
+                                <TextBlock Style="{StaticResource ToolBarBtnTxtStyle}" Text="Place Bookmark" Margin="0,5,0,0"/>
+                            </StackPanel>
+                        </Button>
+                        <Button x:Name="btnFavouritesList" Style="{StaticResource ToolBarBtnStyle}" Click="ToolBarFavourites_Click">
+                            <StackPanel Orientation="Vertical">
+                                <Image Style="{StaticResource ToolBarImgStyle}" Source="Icons/48x48_bookmarks.png"/>
+                                <TextBlock Style="{StaticResource ToolBarBtnTxtStyle}" Text="Show Bookmarks" Margin="0,5,0,0"/>
                             </StackPanel>
                         </Button>
                         <Separator Margin="-10,0,-15,0" Width="45" Height="5" RenderTransformOrigin="0.5,0.5">
@@ -257,7 +249,7 @@
         <Grid Grid.Row="1" Grid.Column="1" Style="{StaticResource ChartsAreaGrid}">
             <Grid>
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="50"/>
+                    <RowDefinition Height="30"/>
                     <RowDefinition Height="1*"/>
                 </Grid.RowDefinitions>
                 <!-- #region CHART TOOLBAR -->
@@ -265,36 +257,36 @@
                     <DockPanel>
                         <Grid Style="{StaticResource ChartToolBarGrid}">
                             <StackPanel Orientation="Horizontal">
-                                <Button Style="{StaticResource ChartBtnStyle}" ToolTip="Turn the selected chart by 90° clockwise." Margin="5,0,0,0" Click="ToolBarChartTurn_Click">
-                                    <StackPanel Orientation="Vertical">
-                                        <Image Style="{StaticResource ChartsToolBarImgStyle}" Source="Icons/48x48_rotate.png"/>
-                                        <TextBlock Style="{StaticResource ToolBarBtnTxtStyle}" Text="Turn" Margin="0,5,0,0"/>
-                                    </StackPanel>
+                                <Button Style="{StaticResource ChartBtnStyle}" ToolTip="Zoom-out the selected chart." Margin="5,0,0,0" Click="ToolBarChartZoomOut_Click">
+                                    <Button.Content>
+                                        <Image Style="{StaticResource ChartsToolBarImgStyle}" Source="Icons/48x48_zoomOut.png"/>
+                                    </Button.Content>
                                 </Button>
-                                <Button Style="{StaticResource ChartBtnStyle}" ToolTip="Open the selected chart as image in Windows." Margin="5,0,0,0" Click="ToolBarChartOpen_Click">
-                                    <StackPanel Orientation="Vertical">
-                                        <Image Style="{StaticResource ChartsToolBarImgStyle}" Source="Icons/48x48_chart.png"/>
-                                        <TextBlock Style="{StaticResource ToolBarBtnTxtStyle}" Text="Open" Margin="0,5,0,0"/>
-                                    </StackPanel>
+                                <Button Style="{StaticResource ChartBtnStyle}" ToolTip="Zoom-in the selected chart." Click="ToolBarChartZoomIn_Click">
+                                    <Button.Content>
+                                        <Image Style="{StaticResource ChartsToolBarImgStyle}" Source="Icons/48x48_zoomIn.png"/>
+                                    </Button.Content>
+                                </Button>
+                                <Button Style="{StaticResource ChartBtnStyle}" ToolTip="Turn the selected chart by 90° clockwise." Margin="5,0,0,0" Click="ToolBarChartTurn_Click">
+                                    <Button.Content>
+                                        <Image Style="{StaticResource ChartsToolBarImgStyle}" Source="Icons/48x48_rotate.png"/>
+                                    </Button.Content>
                                 </Button>
                                 <ToggleButton Style="{StaticResource ChartsToolBarToggleButton}" x:Name="tbtnChartDarkMode" ToolTip="Toggle dark mode for charts." Margin="5,0,-5,0">
-                                    <StackPanel Orientation="Vertical">
+                                    <ToggleButton.Content>
                                         <Image Style="{StaticResource ChartsToolBarImgStyle}" Source="Icons/48x48_darkmode.png"/>
-                                        <TextBlock Style="{StaticResource ToolBarBtnTxtStyle}" Text="Dark mode" Margin="0,5,0,0"/>
-                                    </StackPanel>
+                                    </ToggleButton.Content>
                                 </ToggleButton>
                                 <Separator Margin="5,0,0,0"/>
-                                <Button Style="{StaticResource ChartBtnStyle}" ToolTip="Zoom-in the selected chart." Click="ToolBarChartZoomIn_Click">
-                                    <StackPanel Orientation="Vertical">
-                                        <Image Style="{StaticResource ChartsToolBarImgStyle}" Source="Icons/48x48_zoomIn.png"/>
-                                        <TextBlock Style="{StaticResource ToolBarBtnTxtStyle}" Text="Zoom in" Margin="0,5,0,0"/>
-                                    </StackPanel>
+                                <Button Style="{StaticResource ChartBtnStyle}" ToolTip="Open the selected chart as image in Windows." Margin="5,0,0,0" Click="ToolBarChartOpen_Click">
+                                    <Button.Content>
+                                        <Image Style="{StaticResource ChartsToolBarImgStyle}" Source="Icons/48x48_open_external.png"/>
+                                    </Button.Content>
                                 </Button>
-                                <Button Style="{StaticResource ChartBtnStyle}" ToolTip="Zoom-out the selected chart." Margin="5,0,0,0" Click="ToolBarChartZoomOut_Click">
-                                    <StackPanel Orientation="Vertical">
-                                        <Image Style="{StaticResource ChartsToolBarImgStyle}" Source="Icons/48x48_zoomOut.png"/>
-                                        <TextBlock Style="{StaticResource ToolBarBtnTxtStyle}" Text="Zoom out" Margin="0,5,0,0"/>
-                                    </StackPanel>
+                                <Button Style="{StaticResource ChartBtnStyle}" ToolTip="Open charts library folder." Margin="5,0,0,0" Click="ToolBarChartFolder_Click">
+                                    <Button.Content>
+                                        <Image Style="{StaticResource ChartsToolBarImgStyle}" Source="Icons/48x48_folder.png"/>
+                                    </Button.Content>
                                 </Button>
                             </StackPanel>
                         </Grid>
@@ -372,6 +364,7 @@
                 </Separator>
             </StackPanel>
         </Grid>
+        <Canvas/>
         <!-- #endregion -->
     </Grid>
 </Window>

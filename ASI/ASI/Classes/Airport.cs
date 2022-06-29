@@ -21,6 +21,7 @@ namespace ASI
         public List<Runway> Runways;
         public List<Frequency> Frequencies;
         public string ATIS;
+        public bool IsFavourite = false;
 
         public Airport(OpenAipLib.Airport a)
         {

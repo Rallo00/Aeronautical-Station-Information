@@ -41,11 +41,14 @@ namespace ASI
         public string UNIT_VISIB { get; set; }
         // GRAPHIC SETTINGS
         public bool ShowWindOnRunway { get; set; }
+        //FAVOURITES LIST
+        public List<string> Favourites { get; set; }
 
         public Settings()
         {
             CheckDirectoryStructure();
             LoadSettings();
+            LoadFavourites();
             //Default graphics ---- add it to database
             ShowWindOnRunway = true;
         }
@@ -245,6 +248,63 @@ namespace ASI
             }
             catch (Exception ex) { MainWindow.HandleException(ex); }
             finally { if (dbCon != null) dbCon.Close(); }
+        }
+        private void LoadFavourites()
+        {
+            Favourites = new List<string>();
+            SQLiteConnection dbCon = null;
+            dbCon = new SQLiteConnection("URI=file:" + DATA_PATH_DATABASE);
+            SQLiteDataReader sdr = null;
+            try
+            {
+                dbCon.Open();
+                SQLiteCommand cmd = new SQLiteCommand("SELECT icao FROM Favourites", dbCon);
+                SQLiteDataReader reader = cmd.ExecuteReader();
+                while (reader.Read())
+                    Favourites.Add(reader.GetString(0));
+            }
+            catch (Exception ex) { MainWindow.HandleException(ex); }
+            finally { if (dbCon != null) dbCon.Close(); }
+        }
+        public void AddFavourite(string icao)
+        {
+            //Adding locally
+            Favourites.Add(icao);
+            //Adding to DB
+            SQLiteConnection dbCon = null;
+            dbCon = new SQLiteConnection("URI=file:" + DATA_PATH_DATABASE);
+            try
+            {
+                dbCon.Open();
+                SQLiteCommand cmd = new SQLiteCommand($"INSERT INTO Favourites(icao) VALUES ('{icao.ToUpper()}')", dbCon);                
+                cmd.ExecuteNonQuery();
+                cmd.Dispose();
+            }
+            catch (Exception ex) { MainWindow.HandleException(ex); }
+            finally { if (dbCon != null) dbCon.Close(); }
+        }
+        public void RemoveFavourite(string icao)
+        {
+            //Removing locally
+            for (int i = 0; i < Favourites.Count; i++)
+                if (icao == Favourites[i])
+                    Favourites.RemoveAt(i);
+            //Removing from DB
+            SQLiteConnection dbCon = null;
+            dbCon = new SQLiteConnection("URI=file:" + DATA_PATH_DATABASE);
+            try
+            {
+                dbCon.Open();
+                SQLiteCommand cmd = new SQLiteCommand($"DELETE FROM Favourites WHERE icao = '{icao}'", dbCon);
+                cmd.ExecuteNonQuery();
+                cmd.Dispose();
+            }
+            catch (Exception ex) { MainWindow.HandleException(ex); }
+            finally { if (dbCon != null) dbCon.Close(); }
+        }
+        public string GetApplicationFolderPath()
+        {
+            return System.IO.Directory.GetParent(System.Reflection.Assembly.GetExecutingAssembly().Location).ToString();
         }
     }
 }

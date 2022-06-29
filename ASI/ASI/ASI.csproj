@@ -145,11 +145,18 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="WindowBookmarks.xaml.cs">
+      <DependentUpon>WindowBookmarks.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Classes\Airport.cs" />
     <Compile Include="Classes\Settings.cs" />
     <Compile Include="WindowOptions.xaml.cs">
       <DependentUpon>WindowOptions.xaml</DependentUpon>
     </Compile>
+    <Page Include="WindowBookmarks.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="GraphicsDictionary.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -203,32 +210,17 @@
     <Resource Include="Icons\arrow3.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Icons\48x48_chart.png" />
     <Resource Include="Icons\48x48_folder.png" />
     <Resource Include="Icons\48x48_search.png" />
-    <Resource Include="Icons\48x48_zoomIn.png" />
-    <Resource Include="Icons\48x48_zoomOut.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Icons\48x48_rotate.png" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Icons\48x48_chartsoffline.png" />
     <Resource Include="Icons\48x48_chartsonline.png" />
-    <Resource Include="Icons\48x48_darkmode.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Icons\48x48_refresh.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Icons\48x48_settings.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Icons\48x48_black_atis.png" />
     <Resource Include="Icons\48x48_black_frequency.png" />
     <Resource Include="Icons\48x48_black_info.png" />
     <Resource Include="Icons\48x48_black_route.png" />
-    <Resource Include="Icons\48x48_black_weather.png" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Icons\48x48_black_graphics.png" />
@@ -240,6 +232,19 @@
   <ItemGroup />
   <ItemGroup>
     <Content Include="Backup\db_create.sql" />
+    <Resource Include="Icons\48x48_black_weather.png" />
+    <Resource Include="Icons\48x48_bookmark_empty.png" />
+    <Resource Include="Icons\48x48_bookmark_full.png" />
+    <Resource Include="Icons\48x48_settings.png" />
+    <Resource Include="Icons\48x48_zoomIn.png" />
+    <Resource Include="Icons\48x48_zoomOut.png" />
+    <Resource Include="Icons\48x48_darkmode.png" />
+    <Resource Include="Icons\48x48_refresh.png" />
+    <Resource Include="Icons\48x48_open_external.png" />
+    <Resource Include="Icons\48x48_rotate.png" />
+    <Resource Include="Icons\48x48_external.png" />
+    <Resource Include="Icons\48x48_black_atis.png" />
+    <Resource Include="Icons\48x48_bookmarks.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\System.Text.Json.6.0.3\build\System.Text.Json.targets" Condition="Exists('..\packages\System.Text.Json.6.0.3\build\System.Text.Json.targets')" />
