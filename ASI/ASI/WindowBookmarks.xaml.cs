@@ -28,7 +28,7 @@ namespace ASI
         private void LoadBookmarks()
         {
             lsbBookmarks.Items.Clear();
-            foreach (string s in MainWindow.APP_SETTINGS.Favourites)
+            foreach (string s in MainWindow.APP_SETTINGS.Bookmarks)
                 lsbBookmarks.Items.Add(s);
         }
 

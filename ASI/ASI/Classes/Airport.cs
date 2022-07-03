@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -74,6 +75,23 @@ namespace ASI
             ATIS = "No ATIS available.";
         }
         private int FeetToMeters(int value) { return Convert.ToInt16(value / 3.2808399); }
+
+        public System.Data.DataTable FrequencyToDataTable()
+        {
+            PropertyDescriptorCollection properties =
+                TypeDescriptor.GetProperties(typeof(Frequency));
+            System.Data.DataTable table = new System.Data.DataTable();
+            foreach (PropertyDescriptor prop in properties)
+                table.Columns.Add(prop.Name, Nullable.GetUnderlyingType(prop.PropertyType) ?? prop.PropertyType);
+            foreach (Frequency item in this.Frequencies)
+            {
+                System.Data.DataRow row = table.NewRow();
+                foreach (PropertyDescriptor prop in properties)
+                    row[prop.Name] = prop.GetValue(item) ?? DBNull.Value;
+                table.Rows.Add(row);
+            }
+            return table;
+        }
     }
     public class Runway
     {
@@ -91,9 +109,9 @@ namespace ASI
     }
     public class Frequency
     {
-        public string Value;
-        public string Name;
-        public string Type;
+        public string Value { get; set; }
+        public string Name { get; set; }
+        public string Type { get; set; }
         public Frequency(string v, string n, string t)
         {
             Value = v; Name = n; Type = t;

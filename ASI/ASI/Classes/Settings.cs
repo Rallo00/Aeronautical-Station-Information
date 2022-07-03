@@ -42,7 +42,7 @@ namespace ASI
         // GRAPHIC SETTINGS
         public bool ShowWindOnRunway { get; set; }
         //FAVOURITES LIST
-        public List<string> Favourites { get; set; }
+        public List<string> Bookmarks { get; set; }
 
         public Settings()
         {
@@ -251,7 +251,7 @@ namespace ASI
         }
         private void LoadFavourites()
         {
-            Favourites = new List<string>();
+            Bookmarks = new List<string>();
             SQLiteConnection dbCon = null;
             dbCon = new SQLiteConnection("URI=file:" + DATA_PATH_DATABASE);
             SQLiteDataReader sdr = null;
@@ -261,7 +261,7 @@ namespace ASI
                 SQLiteCommand cmd = new SQLiteCommand("SELECT icao FROM Favourites", dbCon);
                 SQLiteDataReader reader = cmd.ExecuteReader();
                 while (reader.Read())
-                    Favourites.Add(reader.GetString(0));
+                    Bookmarks.Add(reader.GetString(0));
             }
             catch (Exception ex) { MainWindow.HandleException(ex); }
             finally { if (dbCon != null) dbCon.Close(); }
@@ -269,7 +269,7 @@ namespace ASI
         public void AddFavourite(string icao)
         {
             //Adding locally
-            Favourites.Add(icao);
+            Bookmarks.Add(icao);
             //Adding to DB
             SQLiteConnection dbCon = null;
             dbCon = new SQLiteConnection("URI=file:" + DATA_PATH_DATABASE);
@@ -286,9 +286,9 @@ namespace ASI
         public void RemoveFavourite(string icao)
         {
             //Removing locally
-            for (int i = 0; i < Favourites.Count; i++)
-                if (icao == Favourites[i])
-                    Favourites.RemoveAt(i);
+            for (int i = 0; i < Bookmarks.Count; i++)
+                if (icao == Bookmarks[i])
+                    Bookmarks.RemoveAt(i);
             //Removing from DB
             SQLiteConnection dbCon = null;
             dbCon = new SQLiteConnection("URI=file:" + DATA_PATH_DATABASE);

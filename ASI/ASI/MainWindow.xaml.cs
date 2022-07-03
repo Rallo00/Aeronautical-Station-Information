@@ -528,19 +528,14 @@ namespace ASI
                 }
                 else
                     txtATIS.Text = "ATIS is not enabled. Check your settings.";
-                //Showing frequencies
-                if (APP_SETTINGS.IsInformationOpenAip && currentAirport.Frequencies != null)
-                    grdFrequencies.ItemsSource = currentAirport.Frequencies;
-                else
+                //Getting and showing frequencies
+                if (APP_SETTINGS.IsFrequenciesOpenAip)
                 {
                     try
                     {
-                        Airport airportData = new Airport(await OpenAipLib.GetAirportInfo(currentAirport.ICAOCode, APP_SETTINGS.OPENAIP_TOKEN));
-                        if (airportData.Frequencies != null)
-                        {
-                            currentAirport.Frequencies = airportData.Frequencies;
-                            grdFrequencies.ItemsSource = currentAirport.Frequencies;
-                        }
+                        Airport tempAirport = new Airport(await OpenAipLib.GetAirportInfo(icao, MainWindow.APP_SETTINGS.OPENAIP_TOKEN));
+                        if (tempAirport.Frequencies != null)
+                            grdFrequencies.ItemsSource = tempAirport.Frequencies;
                     }
                     catch (Exception) { MessageBox.Show("An error occurred while searching for frequencies in use. Your request has been closed by OpenAIP server.", "Errore", MessageBoxButton.OK, MessageBoxImage.Asterisk); }
                 }
@@ -548,8 +543,8 @@ namespace ASI
             catch (System.Net.WebException) { HandleWarning("Please insert a valid ICAO code."); }
             catch (Exception ex) { HandleException(ex); }
             //Handle favourite (bookmark)
-            if (APP_SETTINGS.Favourites != null)
-                foreach (string s in APP_SETTINGS.Favourites)
+            if (APP_SETTINGS.Bookmarks != null)
+                foreach (string s in APP_SETTINGS.Bookmarks)
                     if (s == icao.ToUpper())
                     {
                         currentAirport.IsFavourite = true;
