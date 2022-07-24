@@ -38,8 +38,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>
-    </ApplicationIcon>
+    <ApplicationIcon>Icons\logo_icon.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup>
     <StartupObject>ASI.App</StartupObject>
@@ -232,6 +231,8 @@
   <ItemGroup />
   <ItemGroup>
     <Content Include="Backup\db_create.sql" />
+    <Resource Include="Icons\logo_icon.ico" />
+    <Resource Include="Icons\logo_128x128.png" />
     <Resource Include="Icons\48x48_black_weather.png" />
     <Resource Include="Icons\48x48_bookmark_empty.png" />
     <Resource Include="Icons\48x48_bookmark_full.png" />

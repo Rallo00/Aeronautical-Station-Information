@@ -156,20 +156,23 @@ namespace ASI
         }
         private void ToolBarFavourite_Click(object sender, RoutedEventArgs e)
         {
-            //If already favourite, cancel
-            if (currentAirport.IsFavourite)
+            if (currentAirport != null)
             {
-                APP_SETTINGS.RemoveFavourite(currentAirport.ICAOCode.ToUpper());
-                if (currentAirport != null)
-                    currentAirport.IsFavourite = false;
-                imgToolbarBtnFavourite.Source = new BitmapImage(new Uri(APP_SETTINGS.GetApplicationFolderPath() + "\\Icons\\48x48_bookmark_empty.png", UriKind.Absolute));
-            }
-            else //Not favourite, add new
-            {
-                APP_SETTINGS.AddFavourite(currentAirport.ICAOCode.ToUpper());
-                if (currentAirport != null)
-                    currentAirport.IsFavourite = true;
-                imgToolbarBtnFavourite.Source = new BitmapImage(new Uri(APP_SETTINGS.GetApplicationFolderPath() + "\\Icons\\48x48_bookmark_full.png", UriKind.Absolute));
+                //If already favourite, cancel
+                if (currentAirport.IsFavourite)
+                {
+                    APP_SETTINGS.RemoveFavourite(currentAirport.ICAOCode.ToUpper());
+                    if (currentAirport != null)
+                        currentAirport.IsFavourite = false;
+                    imgToolbarBtnFavourite.Source = new BitmapImage(new Uri(APP_SETTINGS.GetApplicationFolderPath() + "\\Icons\\48x48_bookmark_empty.png", UriKind.Absolute));
+                }
+                else //Not favourite, add new
+                {
+                    APP_SETTINGS.AddFavourite(currentAirport.ICAOCode.ToUpper());
+                    if (currentAirport != null)
+                        currentAirport.IsFavourite = true;
+                    imgToolbarBtnFavourite.Source = new BitmapImage(new Uri(APP_SETTINGS.GetApplicationFolderPath() + "\\Icons\\48x48_bookmark_full.png", UriKind.Absolute));
+                }
             }
         }
         private void ToolBarFavourites_Click(object sender, RoutedEventArgs e)
