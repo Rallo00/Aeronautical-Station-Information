@@ -584,7 +584,11 @@ namespace ASI
         private void GetStationCharts(string icao)
         {
             if (MainWindow.APP_SETTINGS.IsChartServiceJeppesen) JeppChart = new ChartJeppesen(MainWindow.APP_SETTINGS.JP_USER, MainWindow.APP_SETTINGS.JP_PASSWORD, MainWindow.APP_SETTINGS.DATA_PATH_CHARTS);
-            else if (MainWindow.APP_SETTINGS.IsChartServiceLido) lidoChart = new ChartLufthansa(MainWindow.APP_SETTINGS.LD_USER, MainWindow.APP_SETTINGS.LD_PASSWORD);
+            else if (MainWindow.APP_SETTINGS.IsChartServiceLido)
+            {
+                lidoChart = new ChartLufthansa(MainWindow.APP_SETTINGS.LD_USER, MainWindow.APP_SETTINGS.LD_PASSWORD);
+                while (true) { try { lidoChart.SetConfig(lidoChart.SystemConfig); break; } catch (ArgumentException) { } }
+            }
 
             if (JeppChart != null && MainWindow.APP_SETTINGS.IsChartServiceJeppesen)
             {
